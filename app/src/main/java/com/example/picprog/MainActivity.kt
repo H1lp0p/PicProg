@@ -15,17 +15,19 @@ import com.example.picprog.ui.theme.PicProgTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
+/*        setContent {
             PicProgTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Greeting("Android")
                 }
             }
-        }
+        }*/
+        setContentView(R.layout.activity_main_page)
     }
 }
 
+/*
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
@@ -40,4 +42,4 @@ fun GreetingPreview() {
     PicProgTheme {
         Greeting("Android")
     }
-}
+}*/
