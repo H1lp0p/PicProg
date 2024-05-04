@@ -1,8 +1,7 @@
 package redactor
 import image.Image
-import redactor.redactor
 
-class gausBlur : redactor() {
+class GausBlur : Redactor() {
 
     private var radius : Int = 7
     override var image: Image
