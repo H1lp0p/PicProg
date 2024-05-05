@@ -4,6 +4,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.ComponentActivity
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -11,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 
 import image.Image
+import redactor.GausBlur
 import redactor.Redactor
 
 class MainActivity : ComponentActivity() {
@@ -18,7 +20,7 @@ class MainActivity : ComponentActivity() {
     lateinit var imageView : ImageView
     lateinit var image: Image
 
-    lateinit var nowredactor: Redactor
+    var nowRedactor: Redactor = GausBlur()
 
     @RequiresApi(Build.VERSION_CODES.P)
     val selectImageIntent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -33,6 +35,10 @@ class MainActivity : ComponentActivity() {
         loadBtn = findViewById(R.id.loadBtn)
         imageView = findViewById(R.id.img)
 
+        findViewById<Button>(R.id.GausBlur).setOnClickListener{
+            nowRedactor.compile(image)
+        }
+
         loadBtn.setOnClickListener{
             selectImageIntent.launch("image/*")
         }
@@ -41,7 +47,11 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
     fun onImageGet(imgUri: Uri?){
         if (imgUri != null){
-            val bitMap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, imgUri))
+            val bitMap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, imgUri),
+                ImageDecoder.OnHeaderDecodedListener { decoder, info, source ->
+                    decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+                    decoder.isMutableRequired = true
+                })
             image = Image(bitMap, imageView)
         }
     }
