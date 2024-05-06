@@ -86,10 +86,10 @@ class GausBlur : Redactor() {
                 var sumR = 0.0
                 var sumG = 0.0
                 var sumB = 0.0
-                val alpha = extrBitmap.getPixel(x, y).alpha
+                val alpha = srcBitmap.getPixel(x - halfRadius, y - halfRadius).alpha
 
-                for (matY in IntRange(-halfRadius, halfRadius - 1)){
-                    for (matX in IntRange(-halfRadius, halfRadius - 1)){
+                for (matY in IntRange(-halfRadius, halfRadius)){
+                    for (matX in IntRange(-halfRadius, halfRadius)){
                         val matInd = (matY + halfRadius) * this.radius + matX + halfRadius;
 
                         val extrPixel = extrBitmap.getPixel(x + matX,y + matY)
