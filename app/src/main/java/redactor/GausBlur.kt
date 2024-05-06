@@ -1,12 +1,29 @@
 package redactor
 
 import android.graphics.Bitmap
+import android.graphics.Color
+import androidx.core.graphics.alpha
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import image.Image
+import kotlin.math.exp
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 class GausBlur : Redactor() {
 
-    private var radius : Int = 10
+    private var radius : Int = 7
 
+    private val sigma = 3.0
+    private val sigmaSquared = sigma.pow(2.0)
+    private val mu = 0.0
+    private val constK = 1.0 / (sqrt(2 * Math.PI) * sigma)
+
+    private val xMinusMu = {x: Double -> (x - mu).pow(2.0) }
+    private val expOfX = {x : Double -> exp(-xMinusMu(x) / (2 * sigmaSquared)) }
+    private val gausina = {x: Double -> constK * expOfX(x)}
 
     private fun extrapolite(source: Image) : Bitmap{
         var srcBitmap = source.getBitmap()
@@ -38,9 +55,63 @@ class GausBlur : Redactor() {
         return extrBitmap
     }
 
+    private fun setMatrix() : MutableList<Double>{
+
+        var res = emptyList<Double>().toMutableList()
+        var halfRadius = this.radius / 2
+        var sum = 0.0
+
+        for (y in IntRange(-halfRadius, halfRadius)){
+            for (x in IntRange(-halfRadius, halfRadius)){
+                val value = gausina(sqrt(((x*x) + (y*y)).toDouble()))
+                sum += value
+                res += value
+            }
+        }
+
+        res = res.map { it / sum }.toMutableList()
+
+        return res;
+    }
+
     override fun compile(source: Image) {
-        var extrBitmap = extrapolite(source)
-        source.setBitMap(extrBitmap)
+        val srcBitmap = source.getBitmap()
+        val extrBitmap = extrapolite(source)
+        val matrix = setMatrix()
+
+        val halfRadius = this.radius / 2
+
+        for (y in IntRange(halfRadius, srcBitmap.height + halfRadius - 1)){
+            for (x in IntRange(halfRadius, srcBitmap.width + halfRadius - 1)){
+                var sumR = 0.0
+                var sumG = 0.0
+                var sumB = 0.0
+                val alpha = extrBitmap.getPixel(x, y).alpha
+
+                for (matY in IntRange(-halfRadius, halfRadius - 1)){
+                    for (matX in IntRange(-halfRadius, halfRadius - 1)){
+                        val matInd = (matY + halfRadius) * this.radius + matX + halfRadius;
+
+                        val extrPixel = extrBitmap.getPixel(x + matX,y + matY)
+
+                        sumR += extrPixel.red * matrix[matInd]
+                        sumG += extrPixel.green * matrix[matInd]
+                        sumB += extrPixel.blue * matrix[matInd]
+                    }
+                }
+
+                val newColor = Color.argb(alpha, sumR.toInt(), sumG.toInt(), sumB.toInt())
+
+                srcBitmap.setPixel(x - halfRadius, y - halfRadius, newColor)
+            }
+        }
+/*        val resPixels = IntArray(srcBitmap.width * srcBitmap.height)
+        extrBitmap.getPixels(resPixels, 0, extrBitmap.width, halfRadius, halfRadius,
+            srcBitmap.width, srcBitmap.height)
+
+        srcBitmap.setPixels(resPixels, 0, srcBitmap.width, 0, 0,
+            srcBitmap.width, srcBitmap.height)*/
+        source.setBitMap(srcBitmap)
     }
 
     override fun settings(settings: Map<String, *>) {
