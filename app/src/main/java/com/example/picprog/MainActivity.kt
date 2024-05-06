@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 
 import image.Image
 import redactor.GausBlur
+import redactor.Mosaic
 import redactor.Redactor
 
 class MainActivity : ComponentActivity() {
@@ -37,6 +38,12 @@ class MainActivity : ComponentActivity() {
 
         findViewById<Button>(R.id.GausBlur).setOnClickListener{
             nowRedactor.compile(image)
+        }
+
+        findViewById<Button>(R.id.Mosaic).setOnClickListener{
+            nowRedactor = Mosaic()
+            nowRedactor.compile(image)
+
         }
 
         loadBtn.setOnClickListener{
