@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
         imageView = findViewById(R.id.img)
 
         findViewById<Button>(R.id.GausBlur).setOnClickListener{
+            nowRedactor = GausBlur()
             nowRedactor.compile(image)
         }
 

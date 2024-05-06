@@ -39,13 +39,19 @@ class Mosaic : Redactor() {
                 red /= (pxW * pxH)
                 green /= (pxW * pxH)
                 blue /= (pxW * pxH)
+                val newPixel: Int = Color.argb(alpha, red, green, blue)
 
-                for (i in 0 until pxH) {
+                val newPixels = IntArray(pxH * pxW)
+                for (i in 0 until pxH * pxW)
+                    newPixels[i] = newPixel
+
+                srcBitmap.setPixels(newPixels,0, pxW, x, y, pxW, pxH)
+
+                /*for (i in 0 until pxH) {
                     for (j in 0 until pxW) {
-                        val newPixel: Int = Color.argb(alpha, red, green, blue)
                         srcBitmap.setPixel((x + j), (y+i), newPixel)
                     }
-                }
+                }*/
 
                 x+=px
             }
