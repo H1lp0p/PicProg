@@ -15,6 +15,7 @@ import image.Image
 import redactor.GausBlur
 import redactor.Mosaic
 import redactor.Redactor
+import redactor.Rotation
 
 class MainActivity : ComponentActivity() {
     lateinit var loadBtn : ImageButton
@@ -43,6 +44,12 @@ class MainActivity : ComponentActivity() {
 
         findViewById<Button>(R.id.Mosaic).setOnClickListener{
             nowRedactor = Mosaic()
+            nowRedactor.compile(image)
+
+        }
+
+        findViewById<Button>(R.id.Rotation).setOnClickListener{
+            nowRedactor = Rotation()
             nowRedactor.compile(image)
 
         }

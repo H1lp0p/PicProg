@@ -31,4 +31,5 @@ class Image(private var bitMap: Bitmap,private var imgView: ImageView?) {
         return this.bitMap
     }
 
+
 }
