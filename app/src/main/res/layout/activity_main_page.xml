@@ -16,6 +16,20 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
+            android:id="@+id/saveBtn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@null"
+            android:contentDescription="Save image"
+            android:src="@drawable/dowload_ico"
+
+            android:visibility="invisible"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/dowload_ico" />
+
+        <ImageButton
             android:id="@+id/loadBtn"
             android:layout_width="32dp"
             android:layout_height="32dp"

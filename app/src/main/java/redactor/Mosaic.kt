@@ -47,12 +47,6 @@ class Mosaic : Redactor() {
 
                 srcBitmap.setPixels(newPixels,0, pxW, x, y, pxW, pxH)
 
-                /*for (i in 0 until pxH) {
-                    for (j in 0 until pxW) {
-                        srcBitmap.setPixel((x + j), (y+i), newPixel)
-                    }
-                }*/
-
                 x+=px
             }
             y += px

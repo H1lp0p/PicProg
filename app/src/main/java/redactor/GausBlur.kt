@@ -105,12 +105,6 @@ class GausBlur : Redactor() {
                 srcBitmap.setPixel(x - halfRadius, y - halfRadius, newColor)
             }
         }
-/*        val resPixels = IntArray(srcBitmap.width * srcBitmap.height)
-        extrBitmap.getPixels(resPixels, 0, extrBitmap.width, halfRadius, halfRadius,
-            srcBitmap.width, srcBitmap.height)
-
-        srcBitmap.setPixels(resPixels, 0, srcBitmap.width, 0, 0,
-            srcBitmap.width, srcBitmap.height)*/
         source.setBitMap(srcBitmap)
     }
 

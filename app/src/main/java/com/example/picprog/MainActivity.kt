@@ -1,24 +1,38 @@
 package com.example.picprog
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
+import android.view.View
 import android.widget.Button
-import androidx.activity.ComponentActivity
 import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-
 import image.Image
 import redactor.GausBlur
 import redactor.Mosaic
 import redactor.Redactor
+import java.io.File
+import java.io.FileOutputStream
+import java.io.FileWriter
+import java.io.IOException
+import java.security.AccessController.getContext
+import java.security.Permission
+
 
 class MainActivity : ComponentActivity() {
     lateinit var loadBtn : ImageButton
     lateinit var imageView : ImageView
+    lateinit var saveBtn : ImageButton
     lateinit var image: Image
 
     var nowRedactor: Redactor = GausBlur()
@@ -26,6 +40,7 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
     val selectImageIntent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         onImageGet(uri)
+        saveBtn.visibility = View.VISIBLE
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -35,6 +50,7 @@ class MainActivity : ComponentActivity() {
 
         loadBtn = findViewById(R.id.loadBtn)
         imageView = findViewById(R.id.img)
+        saveBtn = findViewById(R.id.saveBtn)
 
         findViewById<Button>(R.id.GausBlur).setOnClickListener{
             nowRedactor = GausBlur()
@@ -47,20 +63,26 @@ class MainActivity : ComponentActivity() {
 
         }
 
+        saveBtn.setOnClickListener{
+                image.save()
+        }
+
         loadBtn.setOnClickListener{
             selectImageIntent.launch("image/*")
         }
 
     }
+
     @RequiresApi(Build.VERSION_CODES.P)
     fun onImageGet(imgUri: Uri?){
         if (imgUri != null){
-            val bitMap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, imgUri),
+            val srcBitmap = ImageDecoder.decodeBitmap(
+                ImageDecoder.createSource(this.contentResolver, imgUri),
                 ImageDecoder.OnHeaderDecodedListener { decoder, info, source ->
                     decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
                     decoder.isMutableRequired = true
                 })
-            image = Image(bitMap, imageView)
+            image = Image(srcBitmap, "Result", imageView)
         }
     }
 }
