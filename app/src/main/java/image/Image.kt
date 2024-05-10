@@ -24,10 +24,12 @@ class Image(private var bitMap: Bitmap, private val name: String, private var im
             val file = File(dir, "${this.name}.png")
             val stream = FileOutputStream(file)
             this.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, stream)
+            /*Log.i("save", "I try to save!")*/
             stream.flush()
             stream.close()
         }
         catch (e : IOException){
+            /*Log.i("save", "I can't save!")*/
             e.printStackTrace()
         }
     }

@@ -21,6 +21,8 @@ import image.Image
 import redactor.GausBlur
 import redactor.Mosaic
 import redactor.Redactor
+import redactor.Resize
+import redactor.Rotation
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileWriter
@@ -59,6 +61,18 @@ class MainActivity : ComponentActivity() {
 
         findViewById<Button>(R.id.Mosaic).setOnClickListener{
             nowRedactor = Mosaic()
+            nowRedactor.compile(image)
+
+        }
+
+        findViewById<Button>(R.id.Resize).setOnClickListener{
+            nowRedactor = Resize()
+            nowRedactor.compile(image)
+
+        }
+
+        findViewById<Button>(R.id.Rotation).setOnClickListener{
+            nowRedactor = Rotation()
             nowRedactor.compile(image)
 
         }
