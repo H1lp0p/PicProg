@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import image.Image
 import redactor.GausBlur
+import redactor.Grayscale
 import redactor.Mosaic
 import redactor.Redactor
 import redactor.Resize
@@ -68,7 +69,11 @@ class MainActivity : ComponentActivity() {
         findViewById<Button>(R.id.Resize).setOnClickListener{
             nowRedactor = Resize()
             nowRedactor.compile(image)
+        }
 
+        findViewById<Button>(R.id.Grayscale).setOnClickListener{
+            nowRedactor = Grayscale()
+            nowRedactor.compile(image)
         }
 
         findViewById<Button>(R.id.Rotation).setOnClickListener{

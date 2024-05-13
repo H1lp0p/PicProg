@@ -51,8 +51,8 @@ class Mosaic : Redactor() {
             }
             y += px
         }
-        val a = Color.alpha(srcBitmap.getPixel(0, 0))
-        Log.i("Mosaic", "Mosaic.check - alpha = $a")
+        /*val a = Color.alpha(srcBitmap.getPixel(0, 0))
+        Log.i("Mosaic", "Mosaic.check - alpha = $a")*/
         return srcBitmap
     }
 
