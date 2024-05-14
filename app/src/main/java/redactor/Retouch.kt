@@ -1,12 +1,13 @@
 import android.content.Context
 import android.graphics.*
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import image.Image
 import kotlin.math.exp
 import kotlin.math.pow
 
-class Retouch(context: Context, source: Image) : View(context) {
+class Retouch(context: Context, var source: Image) : View(context) {
     private var path = Path()
     private var paint = Paint().apply {
         isAntiAlias = true
@@ -38,10 +39,10 @@ class Retouch(context: Context, source: Image) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        bitmap?.let { canvas.drawBitmap(it, 0f, 0f, null) }
+        bitmap.let { canvas.drawBitmap(it, 0f, 0f, null) }
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+/*    override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
 
@@ -61,9 +62,28 @@ class Retouch(context: Context, source: Image) : View(context) {
             }
         }
         return true
+    }*/
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                // Получаем координаты касания
+                val touchX = event.x
+                val touchY = event.y
+
+                // Применяем эффект ретуши
+                retouch(touchX, touchY)
+                /*applyRetouchEffect(touchX, touchY)*/
+
+                // Перерисовываем view
+                invalidate()
+            }
+        }
+        return true
     }
 
-    private fun retouch(x: Float, y: Float) {
+    fun retouch(x: Float, y: Float) {
+        Log.i("[Ret]x, y ->", "[$x, $y]")
         val radiusSquared = retouchRadius.pow(2)
         val bitmapCanvas = Canvas(bitmap)
         val retouchPaint = Paint()

@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -86,8 +87,14 @@ class MainActivity : ComponentActivity() {
 
         }
 
+
+
         findViewById<Button>(R.id.retouch).setOnClickListener {
             val retouch = Retouch(this.applicationContext, image)
+            imageView.setOnTouchListener(View.OnTouchListener({ v: View, m: MotionEvent ->
+                retouch.onTouchEvent(m)
+            }))
+            /*retouch.retouch(0.0F, 0.0F)*/
         }
 
         saveBtn.setOnClickListener{
