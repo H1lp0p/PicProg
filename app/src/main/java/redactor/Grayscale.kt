@@ -22,7 +22,7 @@ class Grayscale : Redactor() {
         return srcBitmap
     }
 
-    override fun compile(source: Image) {
+    override suspend fun compile(source: Image) {
         source.setBitMap(grayscale(source))
     }
 

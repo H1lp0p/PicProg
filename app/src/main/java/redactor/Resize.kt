@@ -114,7 +114,7 @@ class Resize : Redactor() {
         return newBitmap
     }
 
-    override fun compile(source: Image) {
+    override suspend fun compile(source: Image) {
         val newBitmap : Bitmap = if (k > 1) enlargement(source) else reduction(source)
         source.setBitMap(newBitmap)
     }

@@ -10,6 +10,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
+/*TODO: may be we should attach redactor to Image
+   and use all "business logic" in Image class
+   (this will help to separate view on different coroutines)*/
+
 class Image(private var bitMap: Bitmap, private val name: String, private var imgView: ImageView?) {
 
     init {

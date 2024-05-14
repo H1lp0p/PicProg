@@ -15,6 +15,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/saveBtn"
+            app:layout_constraintStart_toEndOf="@+id/loadBtn"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageButton
             android:id="@+id/saveBtn"
             android:layout_width="32dp"
@@ -130,11 +139,11 @@
                 android:text="GRAYSCALE" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/retouch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="RETOUCH" />
 
         </LinearLayout>
     </HorizontalScrollView>

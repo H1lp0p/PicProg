@@ -8,7 +8,7 @@ class Contrast : Redactor() {
 
 
 
-    override fun compile(source: Image) {
+    override suspend fun compile(source: Image) {
         TODO("Not yet implemented")
     }
 

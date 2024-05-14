@@ -10,7 +10,7 @@ class Rotation : Redactor() {
 
 
 
-    override fun compile(source: Image) {
+    override suspend fun compile(source: Image) {
         val prevBitmap = source.getBitmap()
         var bInput = source.getBitmap()
         val bOutput: Bitmap

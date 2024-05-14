@@ -2,6 +2,7 @@ package redactor
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.util.Log
 import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
@@ -11,6 +12,7 @@ import kotlin.math.exp
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import kotlinx.coroutines.*
 
 class GausBlur : Redactor() {
 
@@ -74,37 +76,40 @@ class GausBlur : Redactor() {
         return res;
     }
 
-    override fun compile(source: Image) {
+    override suspend fun compile(source: Image) {
         val srcBitmap = source.getBitmap()
         val extrBitmap = extrapolite(source)
         val matrix = setMatrix()
 
         val halfRadius = this.radius / 2
 
-        for (y in IntRange(halfRadius, srcBitmap.height + halfRadius - 1)){
-            for (x in IntRange(halfRadius, srcBitmap.width + halfRadius - 1)){
-                var sumR = 0.0
-                var sumG = 0.0
-                var sumB = 0.0
-                val alpha = srcBitmap.getPixel(x - halfRadius, y - halfRadius).alpha
 
-                for (matY in IntRange(-halfRadius, halfRadius)){
-                    for (matX in IntRange(-halfRadius, halfRadius)){
-                        val matInd = (matY + halfRadius) * this.radius + matX + halfRadius;
+            for (y in IntRange(halfRadius, srcBitmap.height + halfRadius - 1)) {
+                for (x in IntRange(halfRadius, srcBitmap.width + halfRadius - 1)) {
 
-                        val extrPixel = extrBitmap.getPixel(x + matX,y + matY)
+                    GlobalScope.async {
+                        var sumR = 0.0
+                        var sumG = 0.0
+                        var sumB = 0.0
+                        val alpha = srcBitmap.getPixel(x - halfRadius, y - halfRadius).alpha
+                        for (matY in IntRange(-halfRadius, halfRadius)) {
+                            for (matX in IntRange(-halfRadius, halfRadius)) {
+                                val matInd = (matY + halfRadius) * radius + matX + halfRadius;
 
-                        sumR += extrPixel.red * matrix[matInd]
-                        sumG += extrPixel.green * matrix[matInd]
-                        sumB += extrPixel.blue * matrix[matInd]
+                                val extrPixel = extrBitmap.getPixel(x + matX, y + matY)
+
+                                sumR += extrPixel.red * matrix[matInd]
+                                sumG += extrPixel.green * matrix[matInd]
+                                sumB += extrPixel.blue * matrix[matInd]
+                            }
+                        }
+                        val newColor = Color.argb(alpha, sumR.toInt(), sumG.toInt(), sumB.toInt())
+
+                        srcBitmap.setPixel(x - halfRadius, y - halfRadius, newColor)
                     }
+
                 }
-
-                val newColor = Color.argb(alpha, sumR.toInt(), sumG.toInt(), sumB.toInt())
-
-                srcBitmap.setPixel(x - halfRadius, y - halfRadius, newColor)
             }
-        }
         source.setBitMap(srcBitmap)
     }
 

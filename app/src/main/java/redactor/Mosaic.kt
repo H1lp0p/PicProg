@@ -56,7 +56,7 @@ class Mosaic : Redactor() {
         return srcBitmap
     }
 
-    override fun compile(source: Image) {
+    override suspend fun compile(source: Image) {
         val newBitmap = mosaic(source)
         source.setBitMap(newBitmap)
     }

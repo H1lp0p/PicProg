@@ -1,5 +1,6 @@
 package com.example.picprog
 
+import Retouch
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -14,16 +15,16 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import image.Image
-import redactor.GausBlur
-import redactor.Grayscale
-import redactor.Mosaic
-import redactor.Redactor
-import redactor.Resize
-import redactor.Rotation
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.launch
+import redactor.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileWriter
@@ -54,32 +55,39 @@ class MainActivity : ComponentActivity() {
         loadBtn = findViewById(R.id.loadBtn)
         imageView = findViewById(R.id.img)
         saveBtn = findViewById(R.id.saveBtn)
+        val loadTxt = findViewById<TextView>(R.id.loading)
 
         findViewById<Button>(R.id.GausBlur).setOnClickListener{
             nowRedactor = GausBlur()
-            nowRedactor.compile(image)
+            val job = GlobalScope.launch {
+                nowRedactor.compile(image)
+            }
         }
 
         findViewById<Button>(R.id.Mosaic).setOnClickListener{
             nowRedactor = Mosaic()
-            nowRedactor.compile(image)
+            GlobalScope.async { nowRedactor.compile(image) }
 
         }
 
         findViewById<Button>(R.id.Resize).setOnClickListener{
             nowRedactor = Resize()
-            nowRedactor.compile(image)
+            GlobalScope.async { nowRedactor.compile(image) }
         }
 
         findViewById<Button>(R.id.Grayscale).setOnClickListener{
             nowRedactor = Grayscale()
-            nowRedactor.compile(image)
+            GlobalScope.async { nowRedactor.compile(image) }
         }
 
         findViewById<Button>(R.id.Rotation).setOnClickListener{
             nowRedactor = Rotation()
-            nowRedactor.compile(image)
+            GlobalScope.async { nowRedactor.compile(image) }
 
+        }
+
+        findViewById<Button>(R.id.retouch).setOnClickListener {
+            val retouch = Retouch(this.applicationContext, image)
         }
 
         saveBtn.setOnClickListener{
@@ -105,3 +113,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+//TODO: coroutine for redactor compiling and view using
