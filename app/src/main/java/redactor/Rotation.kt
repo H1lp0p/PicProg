@@ -1,15 +1,13 @@
 package redactor
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.Matrix
-import android.util.Log
 import image.Image
 import kotlin.math.*
 class Rotation : Redactor() {
 
-    private var angle : Double = 30.0
+    private var angle : Double = 90.0
 
-    fun rotateImage(source: Bitmap): Bitmap {
+    private fun rotateImage(source: Bitmap): Bitmap {
         val radians = Math.toRadians(angle)
         val sin = sin(radians)
         val cos = cos(radians)
@@ -26,43 +24,46 @@ class Rotation : Redactor() {
                 val b = y - newHeight * 0.5
                 val xx = (a * cos + b * sin + x0).toFloat()
                 val yy = (-a * sin + b * cos + y0).toFloat()
-                val color = bilinearInterpolate(source, xx, yy)
+                val color = this.bilinearInterpolate(source, xx, yy)
                 rotatedBitmap.setPixel(x, y, color)
             }
         }
         return rotatedBitmap
     }
 
-    fun bilinearInterpolate(source: Bitmap, x: Float, y: Float): Int {
+    private fun bilinearInterpolate(source: Bitmap, x: Float, y: Float): Int {
         val x1 = floor(x).toInt()
         val y1 = floor(y).toInt()
+
         val x2 = ceil(x).toInt()
         val y2 = ceil(y).toInt()
 
-        val Q11 = getPixelColor(source, x1, y1)
-        val Q12 = getPixelColor(source, x1, y2)
-        val Q21 = getPixelColor(source, x2, y1)
-        val Q22 = getPixelColor(source, x2, y2)
+        val pix11 = getPixelColor(source, x1, y1)
+        val pix12 = getPixelColor(source, x1, y2)
+        val pix21 = getPixelColor(source, x2, y1)
+        val pix22 = getPixelColor(source, x2, y2)
 
+        val kx = x - x1
+        val ky = y - y1
 
-        val R1 = interpolate(Q11, Q21, x - x1)
-        val R2 = interpolate(Q12, Q22, x - x1)
+        val res1 = interpolate(pix11, pix21, kx)
+        val res2 = interpolate(pix12, pix22, kx)
 
-        return interpolate(R1, R2, y - y1)
+        return interpolate(res1, res2, ky)
     }
 
-    fun getPixelColor(source: Bitmap, x: Int, y: Int): Int {
+    private fun getPixelColor(source: Bitmap, x: Int, y: Int): Int {
         if (x < 0 || x >= source.width || y < 0 || y >= source.height) {
-            return 0 // Or any default color
+            return 0 // default color
         }
         return source.getPixel(x, y)
     }
 
-    fun interpolate(Q1: Int, Q2: Int, fraction: Float): Int {
-        val a = ((1 - fraction) * Color.alpha(Q1) + fraction * Color.alpha(Q2)).toInt()
-        val r = ((1 - fraction) * Color.red(Q1) + fraction * Color.red(Q2)).toInt()
-        val g = ((1 - fraction) * Color.green(Q1) + fraction * Color.green(Q2)).toInt()
-        val b = ((1 - fraction) * Color.blue(Q1) + fraction * Color.blue(Q2)).toInt()
+    private fun interpolate(pix1: Int, pix2: Int, k: Float): Int {
+        val a = ((1 - k) * Color.alpha(pix1) + k * Color.alpha(pix2)).toInt()
+        val r = ((1 - k) * Color.red(pix1) + k * Color.red(pix2)).toInt()
+        val g = ((1 - k) * Color.green(pix1) + k * Color.green(pix2)).toInt()
+        val b = ((1 - k) * Color.blue(pix1) + k * Color.blue(pix2)).toInt()
         return Color.argb(a, r, g, b)
     }
     /*private fun rotateImage(source: Bitmap): Bitmap {
