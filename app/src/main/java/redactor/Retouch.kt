@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.Log
@@ -7,7 +8,8 @@ import image.Image
 import kotlin.math.exp
 import kotlin.math.pow
 
-class Retouch(context: Context, var source: Image) : View(context) {
+@SuppressLint("ViewConstructor")
+class Retouch(context: Context, source: Image) : View(context) {
     private var path = Path()
     private var paint = Paint().apply {
         isAntiAlias = true
@@ -64,13 +66,15 @@ class Retouch(context: Context, var source: Image) : View(context) {
         return true
     }*/
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+
                 // Получаем координаты касания
                 val touchX = event.x
                 val touchY = event.y
-
+                Log.i("[Ret]x, y ->", "[$touchX, $touchY]")
                 // Применяем эффект ретуши
                 retouch(touchX, touchY)
                 /*applyRetouchEffect(touchX, touchY)*/
@@ -82,8 +86,8 @@ class Retouch(context: Context, var source: Image) : View(context) {
         return true
     }
 
-    fun retouch(x: Float, y: Float) {
-        Log.i("[Ret]x, y ->", "[$x, $y]")
+    private fun retouch(x: Float, y: Float) {
+        /*Log.i("[Ret]x, y ->", "[$x, $y]")*/
         val radiusSquared = retouchRadius.pow(2)
         val bitmapCanvas = Canvas(bitmap)
         val retouchPaint = Paint()
