@@ -3,6 +3,7 @@ package redactor
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.util.Log
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
@@ -113,12 +114,7 @@ class GausBlur : Redactor() {
         source.setBitMap(srcBitmap)
     }
 
-    override fun settings(settings: Map<String, *>) {
-        if ("radius" in settings.keys){
-            this.radius = settings["radius"] as Int
-        }
-        else{
-            this.radius = 7
-        }
+    override fun settings(layout: ConstraintLayout) {
+        TODO("Not yet implemented")
     }
 }

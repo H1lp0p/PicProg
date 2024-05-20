@@ -2,6 +2,7 @@ package redactor
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import androidx.constraintlayout.widget.ConstraintLayout
 import image.Image
 
 class Grayscale : Redactor() {
@@ -26,6 +27,7 @@ class Grayscale : Redactor() {
         source.setBitMap(grayscale(source))
     }
 
-    override fun settings(settings: Map<String, *>) {
+    override fun settings(layout: ConstraintLayout) {
+        TODO("Not yet implemented")
     }
 }

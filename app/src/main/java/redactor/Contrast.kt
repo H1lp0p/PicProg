@@ -1,4 +1,5 @@
 package redactor
+import androidx.constraintlayout.widget.ConstraintLayout
 import image.Image
 
 class Contrast : Redactor() {
@@ -12,8 +13,7 @@ class Contrast : Redactor() {
         TODO("Not yet implemented")
     }
 
-    override fun settings(settings : Map<String, *>) {
-        this.contrastValue = 0.5
+    override fun settings(layout: ConstraintLayout) {
         TODO("Not yet implemented")
     }
 }

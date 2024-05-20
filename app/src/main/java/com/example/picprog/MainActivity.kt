@@ -20,6 +20,7 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import image.Image
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -60,30 +61,30 @@ class MainActivity : ComponentActivity() {
 
         findViewById<Button>(R.id.GausBlur).setOnClickListener{
             nowRedactor = GausBlur()
-            val job = GlobalScope.launch {
+            val job = lifecycleScope.launch {
                 nowRedactor.compile(image)
             }
         }
 
         findViewById<Button>(R.id.Mosaic).setOnClickListener{
             nowRedactor = Mosaic()
-            GlobalScope.async { nowRedactor.compile(image) }
+            lifecycleScope.async { nowRedactor.compile(image) }
 
         }
 
         findViewById<Button>(R.id.Resize).setOnClickListener{
             nowRedactor = Resize()
-            GlobalScope.async { nowRedactor.compile(image) }
+            lifecycleScope.async { nowRedactor.compile(image) }
         }
 
         findViewById<Button>(R.id.Grayscale).setOnClickListener{
             nowRedactor = Grayscale()
-            GlobalScope.async { nowRedactor.compile(image) }
+            lifecycleScope.async { nowRedactor.compile(image) }
         }
 
         findViewById<Button>(R.id.Rotation).setOnClickListener{
             nowRedactor = Rotation()
-            GlobalScope.async { nowRedactor.compile(image) }
+            lifecycleScope.async { nowRedactor.compile(image) }
 
         }
 
@@ -120,5 +121,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-//TODO: coroutine for redactor compiling and view using

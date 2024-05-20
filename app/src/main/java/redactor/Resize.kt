@@ -2,6 +2,7 @@ package redactor
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import androidx.constraintlayout.widget.ConstraintLayout
 import image.Image
 
 
@@ -119,12 +120,7 @@ class Resize : Redactor() {
         source.setBitMap(newBitmap)
     }
 
-    override fun settings(settings: Map<String, *>) {
-        if ("px" in settings.keys){
-            this.k = settings["new size"] as Double
-        }
-        else{
-            this.k = 0.5
-        }
+    override fun settings(layout: ConstraintLayout) {
+        TODO("Not yet implemented")
     }
 }

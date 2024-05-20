@@ -8,6 +8,8 @@ import image.Image
 import kotlin.math.exp
 import kotlin.math.pow
 
+
+//TODO: well, fit it in our structure???
 @SuppressLint("ViewConstructor")
 class Retouch(context: Context, source: Image) : View(context) {
     private var path = Path()
@@ -21,9 +23,17 @@ class Retouch(context: Context, source: Image) : View(context) {
     private var bitmap: Bitmap
     private var retouchRadius = 100f // Размер кисти
     private var retouchStrength = 0.9f // Коэффициент ретуши
+    private val width : Int
+    private val height : Int
+    private val wCoef: Int
+    private val hCoef : Int
 
     init{
         bitmap = source.getBitmap()
+        width = bitmap.width
+        height = bitmap.height
+        wCoef = if (width > getWidth()) (width / (getWidth()+1)) else 1
+        hCoef = if (height > getHeight()) (height / (getHeight()+1)) else 1
     }
 
     fun setBitmap(bmp: Bitmap) {
@@ -72,15 +82,15 @@ class Retouch(context: Context, source: Image) : View(context) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
 
                 // Получаем координаты касания
-                val touchX = event.x
-                val touchY = event.y
-                Log.i("[Ret]x, y ->", "[$touchX, $touchY]")
+                val touchX = event.x * wCoef        //this shit uses coordinates from view but drawing on image's coordinates. that's why it shifts on some images
+                val touchY = event.y * hCoef
+                Log.i("[Ret]x, y ->", "[$touchX, $touchY, $wCoef, $hCoef, ${getWidth()}, ${getHeight()}]")
                 // Применяем эффект ретуши
                 retouch(touchX, touchY)
                 /*applyRetouchEffect(touchX, touchY)*/
 
                 // Перерисовываем view
-                invalidate()
+                invalidate()    //actually, with this line our code must update image, but it doesn't
             }
         }
         return true

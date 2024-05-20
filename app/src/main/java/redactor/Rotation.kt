@@ -2,6 +2,7 @@ package redactor
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.util.Log
+import androidx.constraintlayout.widget.ConstraintLayout
 import image.Image
 
 class Rotation : Redactor() {
@@ -23,12 +24,7 @@ class Rotation : Redactor() {
         source.setBitMap(bOutput)
     }
 
-    override fun settings(settings: Map<String, *>) {
-        if ("angle" in settings.keys){
-            this.angle = settings["radius"] as Int
-        }
-        else{
-            this.angle = 90
-        }
+    override fun settings(layout: ConstraintLayout) {
+        TODO("Not yet implemented")
     }
 }

@@ -3,6 +3,7 @@ package redactor
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.util.Log
+import androidx.constraintlayout.widget.ConstraintLayout
 import image.Image
 
 
@@ -61,12 +62,7 @@ class Mosaic : Redactor() {
         source.setBitMap(newBitmap)
     }
 
-    override fun settings(settings: Map<String, *>) {
-        if ("px" in settings.keys){
-            this.px = settings["radius"] as Int
-        }
-        else{
-            this.px = 50
-        }
+    override fun settings(layout: ConstraintLayout) {
+        TODO("Not yet implemented")
     }
 }
