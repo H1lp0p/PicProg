@@ -67,9 +67,9 @@
 
         <ImageView
             android:id="@+id/img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Well..."
+            android:layout_width="400dp"
+            android:layout_height="500dp"
+            android:contentDescription="@string/none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

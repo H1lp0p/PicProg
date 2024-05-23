@@ -11,7 +11,7 @@ import kotlin.math.pow
 
 //TODO: well, fit it in our structure???
 @SuppressLint("ViewConstructor")
-class Retouch(context: Context, source: Image) : View(context) {
+class Retouch(context: Context, private var source: Image) : View(context) {
     private var path = Path()
     private var paint = Paint().apply {
         isAntiAlias = true
@@ -25,15 +25,16 @@ class Retouch(context: Context, source: Image) : View(context) {
     private var retouchStrength = 0.9f // Коэффициент ретуши
     private val width : Int
     private val height : Int
-    private val wCoef: Int
-    private val hCoef : Int
+    private val wCoef: Float
+    private val hCoef : Float
+    private var flag = false
 
     init{
         bitmap = source.getBitmap()
         width = bitmap.width
         height = bitmap.height
-        wCoef = if (width > getWidth()) (width / (getWidth()+1)) else 1
-        hCoef = if (height > getHeight()) (height / (getHeight()+1)) else 1
+        wCoef = width.toFloat() / source.width
+        hCoef = height.toFloat() / source.height
     }
 
     fun setBitmap(bmp: Bitmap) {
@@ -51,49 +52,29 @@ class Retouch(context: Context, source: Image) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        bitmap.let { canvas.drawBitmap(it, 0f, 0f, null) }
+
+
     }
-
-/*    override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x = event.x
-        val y = event.y
-
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                path.moveTo(x, y)
-                retouch(x, y)
-                return true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                path.lineTo(x, y)
-                retouch(x, y)
-                invalidate()
-            }
-            MotionEvent.ACTION_UP -> {
-                path.reset()
-            }
-        }
-        return true
-    }*/
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!this.flag) return true
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-
-                // Получаем координаты касания
-                val touchX = event.x * wCoef        //this shit uses coordinates from view but drawing on image's coordinates. that's why it shifts on some images
+                val touchX = event.x * wCoef
                 val touchY = event.y * hCoef
-                Log.i("[Ret]x, y ->", "[$touchX, $touchY, $wCoef, $hCoef, ${getWidth()}, ${getHeight()}]")
+                Log.i("[Ret]x, y ->", "[$touchX, $touchY, ${wCoef}, ${hCoef}]")
                 // Применяем эффект ретуши
                 retouch(touchX, touchY)
-                /*applyRetouchEffect(touchX, touchY)*/
-
-                // Перерисовываем view
-                invalidate()    //actually, with this line our code must update image, but it doesn't
+            }
+            MotionEvent.ACTION_UP -> {
             }
         }
         return true
+    }
+
+    fun use(flag: Boolean){
+        this.flag = flag
     }
 
     private fun retouch(x: Float, y: Float) {
@@ -102,10 +83,33 @@ class Retouch(context: Context, source: Image) : View(context) {
         val bitmapCanvas = Canvas(bitmap)
         val retouchPaint = Paint()
 
+        var R = 0
+        var G = 0
+        var B = 0
+        var count = 0
+
         for (i in -retouchRadius.toInt()..retouchRadius.toInt()) {
             for (j in -retouchRadius.toInt()..retouchRadius.toInt()) {
                 if (i * i + j * j <= radiusSquared) {
-                    val factor = exp(-((i * i + j * j) / radiusSquared).toDouble()).toFloat() * retouchStrength
+                    val pixelX = (x + i).toInt()
+                    val pixelY = (y + j).toInt()
+                    if (pixelX in 0 until bitmap.width && pixelY in 0 until bitmap.height) {
+                        val pixel = bitmap.getPixel(pixelX, pixelY)
+                        R += Color.red(pixel)
+                        G += Color.green(pixel)
+                        B += Color.blue(pixel)
+                        count += 1
+                    }
+                }
+            }
+        }
+        R /= count
+        G /= count
+        B /= count
+        for (i in -retouchRadius.toInt()..retouchRadius.toInt()) {
+            for (j in -retouchRadius.toInt()..retouchRadius.toInt()) {
+                if (i * i + j * j <= radiusSquared) {
+                    val factor = exp(-(((i * i + j * j) / radiusSquared)).toDouble()).toFloat() * retouchStrength
                     val pixelX = (x + i).toInt()
                     val pixelY = (y + j).toInt()
                     if (pixelX in 0 until bitmap.width && pixelY in 0 until bitmap.height) {
@@ -113,11 +117,16 @@ class Retouch(context: Context, source: Image) : View(context) {
                         val r = Color.red(pixel)
                         val g = Color.green(pixel)
                         val b = Color.blue(pixel)
-                        retouchPaint.color = Color.argb((255 * factor).toInt(), r, g, b)
-                        bitmapCanvas.drawPoint(pixelX.toFloat(), pixelY.toFloat(), retouchPaint)
+                        retouchPaint.color = Color.argb(255, (r+(R - r)*factor).toInt(), (g+(G - g)*factor).toInt(), (b+(B - b)*factor).toInt())
+                        bitmap.setPixel(pixelX, pixelY, retouchPaint.color)
+
+                       /* retouchPaint.color = Color.argb((255 * factor).toInt(), r, g, b)
+                        bitmapCanvas.drawPoint(pixelX.toFloat(), pixelY.toFloat(), retouchPaint)*/
                     }
                 }
             }
         }
+        bitmap.let { bitmapCanvas.drawBitmap(it, 0f, 0f, null) }
+        source.setBitMap(bitmap)
     }
 }

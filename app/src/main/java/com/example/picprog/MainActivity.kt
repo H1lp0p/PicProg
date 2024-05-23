@@ -1,6 +1,7 @@
 package com.example.picprog
 
 import Retouch
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -40,6 +41,9 @@ class MainActivity : ComponentActivity() {
     lateinit var imageView : ImageView
     lateinit var saveBtn : ImageButton
     lateinit var image: Image
+    lateinit var retouch : Retouch
+
+    private var retouchFlag = false
 
     var nowRedactor: Redactor = GausBlur()
 
@@ -49,6 +53,7 @@ class MainActivity : ComponentActivity() {
         saveBtn.visibility = View.VISIBLE
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,14 +93,14 @@ class MainActivity : ComponentActivity() {
 
         }
 
-
+        imageView.setOnTouchListener(View.OnTouchListener { _: View, m: MotionEvent ->
+            retouch.onTouchEvent(m)
+        })
 
         findViewById<Button>(R.id.retouch).setOnClickListener {
-            val retouch = Retouch(this.applicationContext, image)
-            imageView.setOnTouchListener(View.OnTouchListener({ v: View, m: MotionEvent ->
-                retouch.onTouchEvent(m)
-            }))
-            /*retouch.retouch(0.0F, 0.0F)*/
+            retouch.use(!retouchFlag)
+            retouchFlag = !retouchFlag
+
         }
 
         saveBtn.setOnClickListener{
@@ -118,6 +123,8 @@ class MainActivity : ComponentActivity() {
                     decoder.isMutableRequired = true
                 })
             image = Image(srcBitmap, "Result", imageView)
+            retouch = Retouch(this.applicationContext, image)
+            retouchFlag = false
         }
     }
 }

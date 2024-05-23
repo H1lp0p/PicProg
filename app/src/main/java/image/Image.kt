@@ -16,8 +16,12 @@ import java.io.IOException
 
 class Image(private var bitMap: Bitmap, private val name: String, private var imgView: ImageView?) {
 
+    public var width : Int = 0
+    public var height : Int = 0
+
     init {
         if (imgView != null){
+            imgView!!.setImageDrawable(null)
             updateView()
         }
     }
@@ -45,6 +49,8 @@ class Image(private var bitMap: Bitmap, private val name: String, private var im
     private fun updateView(){
         if (imgView != null){
             imgView!!.setImageBitmap(this.bitMap)
+            this.width = imgView!!.measuredWidth
+            this.height = imgView!!.measuredHeight
         }
     }
 

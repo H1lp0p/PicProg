@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">PicProg</string>
     <string name="default_settings">There will be settings in future</string>>
+    <string name="none">Well…</string>
 </resources>
