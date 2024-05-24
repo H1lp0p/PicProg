@@ -22,7 +22,7 @@ class CubeActivity : ComponentActivity() {
         val backBtn = findViewById<ImageButton>(R.id.backBtn)
 
 
-        layout.addView(Cube(this))
+        layout.addView(Cube(this, resources))
 
        /* imgView.setOnTouchListener(View.OnTouchListener{ _: View, m: MotionEvent ->
             cube.onTouchEvent(m)
