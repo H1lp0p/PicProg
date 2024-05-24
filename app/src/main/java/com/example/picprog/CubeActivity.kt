@@ -1,4 +1,7 @@
 package com.example.picprog
 
-class CubeActivity {
+import androidx.activity.ComponentActivity
+
+class CubeActivity : ComponentActivity(){
+
 }

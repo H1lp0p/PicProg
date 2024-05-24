@@ -1,32 +1,19 @@
 package com.example.picprog
 
-import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import androidx.activity.ComponentActivity
-import redactor.*
+import spline.Spline
 
 
 class SplineActivity : ComponentActivity() {
-//    @RequiresApi(Build.VERSION_CODES.P)
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_spline_page)
-//    }
-//
-//
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(DrawView(this))
+        setContentView(R.layout.activity_spline_page)
+        val lay1 = findViewById<View>(R.id.layout) as LinearLayout
+        lay1.addView(Spline(this))
     }
-
-
-    internal class DrawView(context: Context?) : View(context) {
-        override fun onDraw(canvas: Canvas) {
-            canvas.drawColor(Color.GREEN)
-        }
-    }
-
 }
