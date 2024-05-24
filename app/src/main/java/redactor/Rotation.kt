@@ -1,6 +1,7 @@
 package redactor
 import android.graphics.Bitmap
 import android.graphics.Color
+import androidx.constraintlayout.widget.ConstraintLayout
 import image.Image
 import kotlin.math.*
 class Rotation : Redactor() {
@@ -101,7 +102,7 @@ class Rotation : Redactor() {
         return rotatedBitmap
     }*/
 
-    override fun compile(source: Image) {
+    override suspend fun compile(source: Image) {
         /*val prevBitmap = source.getBitmap()
         var bInput = source.getBitmap()
         val bOutput: Bitmap
@@ -116,12 +117,7 @@ class Rotation : Redactor() {
         source.setBitMap(rotateImage(source.getBitmap()))
     }
 
-    override fun settings(settings: Map<String, *>) {
-        if ("angle" in settings.keys){
-            this.angle = settings["angle"] as Double
-        }
-        else{
-            this.angle = 90.0
-        }
+    override fun settings(layout: ConstraintLayout) {
+        //TODO
     }
 }
