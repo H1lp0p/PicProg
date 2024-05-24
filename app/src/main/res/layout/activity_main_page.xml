@@ -165,6 +165,13 @@
                 android:layout_weight="1"
                 android:text="RETOUCH" />
 
+            <Button
+                android:id="@+id/faces"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="faces" />
+
         </LinearLayout>
     </HorizontalScrollView>
 
