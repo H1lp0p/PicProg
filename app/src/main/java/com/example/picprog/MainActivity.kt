@@ -111,6 +111,11 @@ class MainActivity : ComponentActivity() {
             selectImageIntent.launch("image/*")
         }
 
+        findViewById<Button>(R.id.escapeBtn).setOnClickListener {
+            val intent = Intent(this, MenuActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intent)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
