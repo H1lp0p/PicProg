@@ -6,7 +6,7 @@ import image.Image
 import kotlin.math.*
 class Rotation : Redactor() {
 
-    private var angle : Double = 90.0
+    private var angle : Double = 45.0
 
     private fun rotateImage(source: Bitmap): Bitmap {
         val radians = Math.toRadians(angle)

@@ -50,12 +50,6 @@ class Retouch(context: Context, private var source: Image) : View(context) {
         retouchStrength = strength
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!this.flag) return true
@@ -78,7 +72,6 @@ class Retouch(context: Context, private var source: Image) : View(context) {
     }
 
     private fun retouch(x: Float, y: Float) {
-        /*Log.i("[Ret]x, y ->", "[$x, $y]")*/
         val radiusSquared = retouchRadius.pow(2)
         val bitmapCanvas = Canvas(bitmap)
         val retouchPaint = Paint()
@@ -126,7 +119,7 @@ class Retouch(context: Context, private var source: Image) : View(context) {
                 }
             }
         }
-        bitmap.let { bitmapCanvas.drawBitmap(it, 0f, 0f, null) }
+        //bitmap.let { bitmapCanvas.drawBitmap(it, 0f, 0f, null) }
         source.setBitMap(bitmap)
     }
 }
