@@ -47,11 +47,11 @@
             android:layout_height="32dp"
             android:background="@null"
             android:contentDescription="Imort image"
-            android:src="@drawable/add_ico"
+            android:src="@drawable/gauss_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/add_ico"
-            tools:srcCompat="@drawable/add_ico" />
+            app:srcCompat="@drawable/gauss_icon"
+            tools:srcCompat="@drawable/gauss_icon" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,10 +72,10 @@
             android:contentDescription="@string/none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_bias="1.0"
             tools:src="@tools:sample/backgrounds/scenic" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
