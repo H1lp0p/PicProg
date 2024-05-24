@@ -3,4 +3,5 @@
     <string name="default_settings">There will be settings in future</string>>
     <string name="none">Well…</string>
     <string name="title_activity_spline">SplineActivity</string>
+    <string name="title_activity_menu">MenuActivity</string>
 </resources>
