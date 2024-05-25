@@ -1,4 +1,6 @@
+import android.content.Context
 import android.graphics.Bitmap
+import android.widget.Toast
 import androidx.core.graphics.createBitmap
 import org.opencv.android.Utils
 import org.opencv.core.Mat
@@ -12,7 +14,7 @@ import java.io.File
 
 
 object FindFaces {
-    private fun findAllFaces(image: Bitmap, file: File): MatOfRect {
+    private fun findAllFaces(image: Bitmap, file: File, context: Context): MatOfRect {
         val toProcessImage = Mat()
         Utils.bitmapToMat(image, toProcessImage)
 
@@ -31,10 +33,12 @@ object FindFaces {
         return faceDetections
     }
 
-    fun drawRectangles(image: Bitmap, file: File): Bitmap {
-        val matrix = findAllFaces(image, file)
+    fun drawRectangles(image: Bitmap, file: File, context: Context): Bitmap {
+        val matrix = findAllFaces(image, file, context)
         val result = createBitmap(image.width, image.height, image.config)
         val newImage = Mat()
+
+        Toast.makeText(context, "found ${matrix.toArray().size} faces", Toast.LENGTH_SHORT).show()
 
         Utils.bitmapToMat(image, newImage)
 

@@ -17,23 +17,27 @@ import java.io.IOException
    and use all "business logic" in Image class
    (this will help to separate view on different coroutines)*/
 
-class Image(private var srcBitmap: Bitmap, private val name: String, private var imgView: ImageView?) {
+class Image(
+    private var srcBitmap: Bitmap,
+    private val name: String,
+    private var imgView: ImageView?
+) {
 
-    private var newBitmap : Bitmap
+    private var newBitmap: Bitmap
     private val fileName = "${this.name}.png"
-    public var width : Int = 0
-    public var height : Int = 0
+    public var width: Int = 0
+    public var height: Int = 0
 
     init {
         newBitmap = srcBitmap.copy(Bitmap.Config.ARGB_8888, true)
-        if (imgView != null){
+        if (imgView != null) {
             imgView!!.setImageDrawable(null)
             updateView()
         }
     }
 
-    fun save(context: Context){
-        try{
+    fun save(context: Context) {
+        try {
             val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
             val file = File(dir, fileName)
             val stream = FileOutputStream(file)
@@ -41,38 +45,42 @@ class Image(private var srcBitmap: Bitmap, private val name: String, private var
             /*Log.i("save", "I try to save!")*/
             stream.flush()
             stream.close()
-            Toast.makeText(context, context.getString(R.string.system_image_saved, fileName), Toast.LENGTH_SHORT).show()
-        }
-        catch (e : IOException){
-            Toast.makeText(context, context.getText(R.string.system_error), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.system_image_saved, fileName),
+                Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: IOException) {
+            Toast.makeText(context, context.getText(R.string.system_error), Toast.LENGTH_SHORT)
+                .show()
             e.printStackTrace()
         }
     }
 
-    fun setView(imageView: ImageView){
+    fun setView(imageView: ImageView) {
         this.imgView = imageView
         updateView()
     }
 
-    fun revert(){
+    fun revert() {
         newBitmap = srcBitmap.copy(Bitmap.Config.ARGB_8888, true)
         updateView()
     }
 
-    private fun updateView(){
-        if (imgView != null){
+    private fun updateView() {
+        if (imgView != null) {
             imgView!!.setImageBitmap(this.newBitmap)
             this.width = imgView!!.measuredWidth
             this.height = imgView!!.measuredHeight
         }
     }
 
-    fun setBitMap(newBitmap: Bitmap){
+    fun setBitMap(newBitmap: Bitmap) {
         this.newBitmap = newBitmap
         updateView()
     }
 
-    fun getBitmap(): Bitmap{
+    fun getBitmap(): Bitmap {
         return this.srcBitmap.copy(Bitmap.Config.ARGB_8888, true)
     }
 }

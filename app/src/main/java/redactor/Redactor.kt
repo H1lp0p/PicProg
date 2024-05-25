@@ -1,4 +1,5 @@
 package redactor
+
 import android.content.Context
 import android.text.Layout
 import android.widget.LinearLayout

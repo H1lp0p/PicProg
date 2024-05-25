@@ -22,17 +22,17 @@ import kotlinx.coroutines.async
 
 class Mosaic : Redactor() {
 
-    private var px : Int = 10
+    private var px: Int = 10
 
-    private fun mosaic(source: Image) : Bitmap {
+    private fun mosaic(source: Image): Bitmap {
         val srcBitmap = source.getBitmap()
 
         var y = 0
         while (y < srcBitmap.height) {
             var x = 0
             while (x < srcBitmap.width) {
-                val pxH : Int = if (px <= srcBitmap.height - y) px else srcBitmap.height - y
-                val pxW : Int = if (px <= srcBitmap.width - x) px else srcBitmap.width - x
+                val pxH: Int = if (px <= srcBitmap.height - y) px else srcBitmap.height - y
+                val pxW: Int = if (px <= srcBitmap.width - x) px else srcBitmap.width - x
 
                 var alpha = 0
                 var red = 0
@@ -42,7 +42,7 @@ class Mosaic : Redactor() {
 
                 for (i in 0 until pxH) {
                     for (j in 0 until pxW) {
-                        pixelColor = srcBitmap.getPixel((x + j), (y+i))
+                        pixelColor = srcBitmap.getPixel((x + j), (y + i))
                         alpha += Color.alpha(pixelColor)
                         red += Color.red(pixelColor)
                         green += Color.green(pixelColor)
@@ -59,9 +59,9 @@ class Mosaic : Redactor() {
                 for (i in 0 until pxH * pxW)
                     newPixels[i] = newPixel
 
-                srcBitmap.setPixels(newPixels,0, pxW, x, y, pxW, pxH)
+                srcBitmap.setPixels(newPixels, 0, pxW, x, y, pxW, pxH)
 
-                x+=px
+                x += px
             }
             y += px
         }
@@ -82,7 +82,7 @@ class Mosaic : Redactor() {
         layout.orientation = LinearLayout.HORIZONTAL
 
         val radiusText = TextView(context).apply {
-            text= context.getString(R.string.settings_mosaic_px, px)
+            text = context.getString(R.string.settings_mosaic_px, px)
         }
         val seekBar = SeekBar(context).apply {
             min = 1
@@ -93,7 +93,7 @@ class Mosaic : Redactor() {
             seekBar.minWidth = 400
         }
 
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 px = progress * 10
                 radiusText.text = context.getString(R.string.settings_mosaic_px, px)
@@ -109,11 +109,19 @@ class Mosaic : Redactor() {
         val compileBtn = ImageButton(context)
         compileBtn.setImageDrawable(context.getDrawable(R.drawable.compile_ico))
         compileBtn.background = null
-        compileBtn.setOnClickListener{
-            ((context)as ComponentActivity).lifecycleScope.async {
-                Toast.makeText(context, context.getText(R.string.system_filter_compiling), Toast.LENGTH_LONG).show()
+        compileBtn.setOnClickListener {
+            ((context) as ComponentActivity).lifecycleScope.async {
+                Toast.makeText(
+                    context,
+                    context.getText(R.string.system_filter_compiling),
+                    Toast.LENGTH_LONG
+                ).show()
                 compile(image)
-                Toast.makeText(context, context.getText(R.string.system_filter_complete), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.getText(R.string.system_filter_complete),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -121,7 +129,7 @@ class Mosaic : Redactor() {
         revertBtn.setImageDrawable(context.getDrawable(R.drawable.clear_icon))
         revertBtn.background = null
 
-        revertBtn.setOnClickListener{
+        revertBtn.setOnClickListener {
             image.revert()
         }
 

@@ -33,13 +33,13 @@ class Retouch(context: Context, private var source: Image) : View(context) {
     private var bitmap: Bitmap
     private var retouchRadius = 10f
     private var retouchStrength = 0.1f
-    private val width : Int
-    private val height : Int
+    private val width: Int
+    private val height: Int
     private val wCoef: Float
-    private val hCoef : Float
+    private val hCoef: Float
     private var flag = false
 
-    init{
+    init {
         bitmap = source.getBitmap()
         width = bitmap.width
         height = bitmap.height
@@ -58,13 +58,14 @@ class Retouch(context: Context, private var source: Image) : View(context) {
                 // Применяем эффект ретуши
                 retouch(touchX, touchY)
             }
+
             MotionEvent.ACTION_UP -> {
             }
         }
         return true
     }
 
-    fun use(flag: Boolean){
+    fun use(flag: Boolean) {
         this.flag = flag
     }
 
@@ -99,7 +100,8 @@ class Retouch(context: Context, private var source: Image) : View(context) {
         for (i in -retouchRadius.toInt()..retouchRadius.toInt()) {
             for (j in -retouchRadius.toInt()..retouchRadius.toInt()) {
                 if (i * i + j * j <= radiusSquared) {
-                    val factor = exp(-(((i * i + j * j) / radiusSquared)).toDouble()).toFloat() * retouchStrength
+                    val factor =
+                        exp(-(((i * i + j * j) / radiusSquared)).toDouble()).toFloat() * retouchStrength
                     val pixelX = (x + i).toInt()
                     val pixelY = (y + j).toInt()
                     if (pixelX in 0 until bitmap.width && pixelY in 0 until bitmap.height) {
@@ -107,7 +109,12 @@ class Retouch(context: Context, private var source: Image) : View(context) {
                         val r = Color.red(pixel)
                         val g = Color.green(pixel)
                         val b = Color.blue(pixel)
-                        retouchPaint.color = Color.argb(255, (r+(R - r)*factor).toInt(), (g+(G - g)*factor).toInt(), (b+(B - b)*factor).toInt())
+                        retouchPaint.color = Color.argb(
+                            255,
+                            (r + (R - r) * factor).toInt(),
+                            (g + (G - g) * factor).toInt(),
+                            (b + (B - b) * factor).toInt()
+                        )
                         bitmap.setPixel(pixelX, pixelY, retouchPaint.color)
 
                     }
@@ -139,7 +146,7 @@ class Retouch(context: Context, private var source: Image) : View(context) {
             seekBarRadius.minWidth = 400
         }
 
-        seekBarRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        seekBarRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 retouchRadius = progress.toFloat()
                 radiusText.text = context.getString(R.string.settings_retouch_radius, progress)
@@ -153,16 +160,19 @@ class Retouch(context: Context, private var source: Image) : View(context) {
         })
 
         val strengthText = TextView(context).apply {
-            text = context.getString(R.string.settings_retouch_strength, (retouchStrength * 10).toInt())
+            text = context.getString(
+                R.string.settings_retouch_strength,
+                (retouchStrength * 10).toInt()
+            )
         }
-        val seekBarSrength = SeekBar(context).apply { 
+        val seekBarSrength = SeekBar(context).apply {
             min = 1
             max = 10
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             seekBarSrength.minWidth = 400
         }
-        seekBarSrength.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        seekBarSrength.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 retouchStrength = progress.toFloat() / 10
                 strengthText.text = context.getString(R.string.settings_retouch_strength, progress)
@@ -174,13 +184,13 @@ class Retouch(context: Context, private var source: Image) : View(context) {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
-        
+
 
         val revertBtn = ImageButton(context)
         revertBtn.setImageDrawable(context.getDrawable(R.drawable.clear_icon))
         revertBtn.background = null
 
-        revertBtn.setOnClickListener{
+        revertBtn.setOnClickListener {
             image.revert()
         }
 

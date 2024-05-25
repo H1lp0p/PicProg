@@ -12,7 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import com.example.picprog.R
 import image.Image
@@ -68,7 +67,7 @@ class Resize : Redactor() {
 
     private fun getPixelColor(source: Bitmap, x: Int, y: Int): Int {
         if (x < 0 || x >= source.width || y < 0 || y >= source.height) {
-            return Color.argb(0,0,0,0)
+            return Color.argb(0, 0, 0, 0)
         }
         return source.getPixel(x, y)
     }

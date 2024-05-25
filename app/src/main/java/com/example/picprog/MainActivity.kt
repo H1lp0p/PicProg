@@ -30,11 +30,11 @@ import java.io.FileOutputStream
 
 
 class MainActivity : ComponentActivity() {
-    private lateinit var loadBtn : ImageButton
-    private lateinit var imageView : ImageView
-    private lateinit var saveBtn : ImageButton
+    private lateinit var loadBtn: ImageButton
+    private lateinit var imageView: ImageView
+    private lateinit var saveBtn: ImageButton
     private var image: Image? = null
-    private lateinit var retouch : Retouch
+    private lateinit var retouch: Retouch
     private lateinit var settingsLayout: LinearLayout
 
     private var retouchFlag = false
@@ -71,14 +71,14 @@ class MainActivity : ComponentActivity() {
         saveBtn = findViewById(R.id.saveBtn)
         settingsLayout = findViewById(R.id.settings)
 
-        findViewById<ImageButton>(R.id.GausBlur).setOnClickListener{
+        findViewById<ImageButton>(R.id.GausBlur).setOnClickListener {
             if (nowRedactor !is GausBlur) {
                 nowRedactor = GausBlur()
             }
             if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
         }
 
-        findViewById<ImageButton>(R.id.Mosaic).setOnClickListener{
+        findViewById<ImageButton>(R.id.Mosaic).setOnClickListener {
             if (nowRedactor !is Mosaic) {
                 nowRedactor = Mosaic()
             }
@@ -86,25 +86,31 @@ class MainActivity : ComponentActivity() {
 
         }
 
-        findViewById<ImageButton>(R.id.Resize).setOnClickListener{
+        findViewById<ImageButton>(R.id.Resize).setOnClickListener {
             if (nowRedactor !is Resize) {
                 nowRedactor = Resize()
             }
             if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
         }
 
-        findViewById<ImageButton>(R.id.Grayscale).setOnClickListener{
+        findViewById<ImageButton>(R.id.Grayscale).setOnClickListener {
             if (nowRedactor !is Grayscale) {
                 nowRedactor = Grayscale()
             }
             if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
         }
 
-        findViewById<ImageButton>(R.id.faces).setOnClickListener{
-            if (image != null) image!!.setBitMap(FindFaces.drawRectangles(image!!.getBitmap(), weightsFile))
+        findViewById<ImageButton>(R.id.faces).setOnClickListener {
+            if (image != null) image!!.setBitMap(
+                FindFaces.drawRectangles(
+                    image!!.getBitmap(),
+                    weightsFile,
+                    this
+                )
+            )
         }
 
-        findViewById<ImageButton>(R.id.Rotation).setOnClickListener{
+        findViewById<ImageButton>(R.id.Rotation).setOnClickListener {
             if (nowRedactor !is Rotation) {
                 nowRedactor = Rotation()
             }
@@ -117,23 +123,22 @@ class MainActivity : ComponentActivity() {
         }
 
         findViewById<ImageButton>(R.id.retouch).setOnClickListener {
-            if (!retouchFlag){
+            if (!retouchFlag) {
                 retouch.use(true)
                 retouchFlag = true
                 if (image != null) retouch.settings(settingsLayout, this, image!!)
-            }
-            else{
+            } else {
                 settingsLayout.removeAllViews()
                 retouchFlag = false
             }
         }
 
-        saveBtn.setOnClickListener{
+        saveBtn.setOnClickListener {
 
-                image!!.save(this)
+            image!!.save(this)
         }
 
-        loadBtn.setOnClickListener{
+        loadBtn.setOnClickListener {
             selectImageIntent.launch("image/*")
         }
 
@@ -145,8 +150,8 @@ class MainActivity : ComponentActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
-    fun onImageGet(imgUri: Uri?){
-        if (imgUri != null){
+    fun onImageGet(imgUri: Uri?) {
+        if (imgUri != null) {
             val srcBitmap = ImageDecoder.decodeBitmap(
                 ImageDecoder.createSource(this.contentResolver, imgUri)
             ) { decoder, _, _ ->

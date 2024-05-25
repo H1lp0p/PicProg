@@ -1,4 +1,5 @@
 package redactor
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
@@ -17,9 +18,10 @@ import com.example.picprog.R
 import image.Image
 import kotlinx.coroutines.async
 import kotlin.math.*
+
 class Rotation : Redactor() {
 
-    private var angle : Double = 45.0
+    private var angle: Double = 45.0
 
     private fun rotateImage(source: Bitmap): Bitmap {
         val radians = Math.toRadians(angle)
@@ -80,53 +82,8 @@ class Rotation : Redactor() {
         val b = ((1 - k) * Color.blue(pix1) + k * Color.blue(pix2)).toInt()
         return Color.argb(a, r, g, b)
     }
-    /*private fun rotateImage(source: Bitmap): Bitmap {
-        val width = source.width
-        val height = source.height
-        val newWidth = (width * abs(cos(Math.toRadians(angle))) +
-                        height * abs(sin(Math.toRadians(angle)))).toInt()
-        val newHeight = (height * abs(cos(Math.toRadians(angle))) +
-                        width * abs(sin(Math.toRadians(angle)))).toInt()
-
-        val rotatedBitmap = Bitmap.createBitmap(newWidth, newHeight, source.config)
-
-        val centerX = width / 2.0
-        val centerY = height / 2.0
-
-        val newCenterX = newWidth / 2.0
-        val newCenterY = newHeight / 2.0
-
-        for (x in 0 until width) {
-            for (y in 0 until height) {
-                val deltaX = x - centerX
-                val deltaY = y - centerY
-
-                val newX = (deltaX * cos(Math.toRadians(angle)) -
-                            deltaY * sin(Math.toRadians(angle)) +
-                            newCenterX).toInt()
-                val newY = (deltaX * sin(Math.toRadians(angle)) + deltaY * cos(Math.toRadians(angle)) + newCenterY).toInt()
-
-                if (newX in 0..<newWidth && newY >= 0 && newY < newHeight) {
-                    rotatedBitmap.setPixel(newX, newY, source.getPixel(x, y))
-                }
-            }
-        }
-
-        return rotatedBitmap
-    }*/
 
     override suspend fun compile(source: Image) {
-        /*val prevBitmap = source.getBitmap()
-        var bInput = source.getBitmap()
-        val bOutput: Bitmap
-        val degrees = 45f
-
-        val matrix = Matrix()
-        matrix.postRotate(degrees)
-        bOutput = Bitmap.createBitmap(bInput, 0, 0, bInput.getWidth(), bInput.getHeight(), matrix, true)
-        Log.i("Rotate", "done")
-        source.setBitMap(bOutput)*/
-
         source.setBitMap(rotateImage(source.getBitmap()))
     }
 
@@ -149,7 +106,7 @@ class Rotation : Redactor() {
             seekBar.minWidth = 400
         }
 
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 angle = progress.toDouble()
                 radiusText.text = context.getString(R.string.settings_rotation_angle, progress)
@@ -165,11 +122,19 @@ class Rotation : Redactor() {
         val compileBtn = ImageButton(context)
         compileBtn.setImageDrawable(context.getDrawable(R.drawable.compile_ico))
         compileBtn.background = null
-        compileBtn.setOnClickListener{
-            ((context)as ComponentActivity).lifecycleScope.async {
-                Toast.makeText(context, context.getText(R.string.system_filter_compiling), Toast.LENGTH_LONG).show()
+        compileBtn.setOnClickListener {
+            ((context) as ComponentActivity).lifecycleScope.async {
+                Toast.makeText(
+                    context,
+                    context.getText(R.string.system_filter_compiling),
+                    Toast.LENGTH_LONG
+                ).show()
                 compile(image)
-                Toast.makeText(context, context.getText(R.string.system_filter_complete), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.getText(R.string.system_filter_complete),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -177,7 +142,7 @@ class Rotation : Redactor() {
         revertBtn.setImageDrawable(context.getDrawable(R.drawable.clear_icon))
         revertBtn.background = null
 
-        revertBtn.setOnClickListener{
+        revertBtn.setOnClickListener {
             image.revert()
         }
 

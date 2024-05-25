@@ -48,16 +48,18 @@ class Spline(context: Context?) : View(context) {
         }
         return true
     }
-    fun polygonCheck(flag: Boolean){
+
+    fun polygonCheck(flag: Boolean) {
         this.polygon = flag
         invalidate()
     }
-    fun splineCheck(flag: Boolean){
+
+    fun splineCheck(flag: Boolean) {
         this.spline = flag
         invalidate()
     }
 
-    fun clearButton(){
+    fun clearButton() {
         points.clear()
         invalidate()
     }
@@ -87,12 +89,18 @@ class Spline(context: Context?) : View(context) {
 
         // draw line for polygon
         if (polygon && points.size > 1)
-            canvas.drawLine(points[0].first, points[0].second, points[points.size -1].first, points[points.size -1].second, linePaint)
+            canvas.drawLine(
+                points[0].first,
+                points[0].second,
+                points[points.size - 1].first,
+                points[points.size - 1].second,
+                linePaint
+            )
 
         // draw spline
-        if (spline){
+        if (spline) {
             for (i in 0 until points.size - 1) {
-                val k0 = if (polygon)points.size - 1 else 0
+                val k0 = if (polygon) points.size - 1 else 0
                 val k1 = if (polygon) 0 else i + 1
 
                 val p0 = if (i == 0) points[k0] else points[i - 1] // 0
