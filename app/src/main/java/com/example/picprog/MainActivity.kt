@@ -2,6 +2,7 @@ package com.example.picprog
 
 import Retouch
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -9,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -19,8 +21,12 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import image.Image
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import org.opencv.android.OpenCVLoader
 import redactor.*
+import java.io.File
+import java.io.FileOutputStream
 
 
 class MainActivity : ComponentActivity() {
@@ -44,9 +50,21 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_page)
+
+        OpenCVLoader.initLocal();
+        val inputStream = resources.openRawResource(R.raw.lbpcascade_frontalface_improved)
+        val weightsDir = applicationContext.getDir("cascade", Context.MODE_PRIVATE)
+        val weightsFile = File(weightsDir, "lbpcascade_frontalface_improved.xml")
+        val outputStream = FileOutputStream(weightsFile)
+        val buffer = ByteArray(4096)
+        var bytesRead: Int
+        while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+            outputStream.write(buffer, 0, bytesRead)
+        }
+        inputStream.close()
+        outputStream.close()
 
         loadBtn = findViewById(R.id.loadBtn)
         imageView = findViewById(R.id.img)
@@ -80,6 +98,13 @@ class MainActivity : ComponentActivity() {
                 nowRedactor = Grayscale()
             }
             if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
+        findViewById<Button>(R.id.faces).setOnClickListener{
+            image.setBitMap(FindFaces.drawRectangles(image.getBitmap(), weightsFile))
+        }
+
+        findViewById<Button>(R.id.Grayscale).setOnClickListener{
+            nowRedactor = Grayscale()
+            lifecycleScope.async { nowRedactor.compile(image) }
         }
 
         findViewById<ImageButton>(R.id.Rotation).setOnClickListener{
