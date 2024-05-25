@@ -14,4 +14,7 @@
     <color name="cube_white">#F1E9CE</color>
     <color name="cube_blue">#0048FF</color>
     <color name="cube_green">#00FF04</color>
+
+    <color name="vector_color">#780202</color>
+    <color name="vertex_color">#171717</color>
 </resources>

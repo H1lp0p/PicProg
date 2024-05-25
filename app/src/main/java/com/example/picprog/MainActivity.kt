@@ -98,13 +98,10 @@ class MainActivity : ComponentActivity() {
                 nowRedactor = Grayscale()
             }
             if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
-        findViewById<Button>(R.id.faces).setOnClickListener{
-            image.setBitMap(FindFaces.drawRectangles(image.getBitmap(), weightsFile))
         }
 
-        findViewById<Button>(R.id.Grayscale).setOnClickListener{
-            nowRedactor = Grayscale()
-            lifecycleScope.async { nowRedactor.compile(image) }
+        findViewById<ImageButton>(R.id.faces).setOnClickListener{
+            if (image != null) image!!.setBitMap(FindFaces.drawRectangles(image!!.getBitmap(), weightsFile))
         }
 
         findViewById<ImageButton>(R.id.Rotation).setOnClickListener{

@@ -179,12 +179,15 @@
                 android:src="@drawable/retouch_icon"
                 tools:src="@drawable/retouch_icon" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/faces"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_weight="1"
-                android:text="faces" />
+                android:background="@null"
+                android:contentDescription="@string/none"
+                android:src="@drawable/opencv_ico"
+                tools:src="@drawable/opencv_ico" />
 
         </LinearLayout>
     </HorizontalScrollView>

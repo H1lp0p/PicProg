@@ -73,12 +73,12 @@ class Cube(context: Context, res: Resources) : View(context) {
     private val verticesPaint = Paint().apply {
         style = Paint.Style.STROKE
         strokeWidth = 10f
-        color = Color.argb(255, 0,0,0)
+        color = res.getColor(R.color.vertex_color)
     }
     private val vectorPaint = Paint().apply {
         style = Paint.Style.STROKE
         strokeWidth = 10f
-        color = Color.argb(255, 255, 0,0)
+        color = res.getColor(R.color.vector_color)
     }
 
     @SuppressLint("DrawAllocation")
