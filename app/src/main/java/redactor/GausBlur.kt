@@ -1,23 +1,34 @@
 package redactor
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.util.Log
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.graphics.drawable.Drawable
+import android.os.Build
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import androidx.lifecycle.lifecycleScope
+import com.example.picprog.R
 import image.Image
 import kotlin.math.exp
 import kotlin.math.pow
-import kotlin.math.roundToInt
 import kotlin.math.sqrt
 import kotlinx.coroutines.*
 
 class GausBlur : Redactor() {
 
-    private var radius : Int = 7
+    private var radius : Int = 3
 
     private val sigma = 3.0
     private val sigmaSquared = sigma.pow(2.0)
@@ -114,7 +125,65 @@ class GausBlur : Redactor() {
         source.setBitMap(srcBitmap)
     }
 
-    override fun settings(layout: ConstraintLayout) {
-        TODO("Not yet implemented")
+    @SuppressLint("UseCompatLoadingForDrawables")
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun settings(layout: LinearLayout, context: Context, image: Image) {
+        layout.removeAllViews()
+        layout.orientation = LinearLayout.HORIZONTAL
+
+        val radiusText = TextView(context).apply {
+            text = "radius = $radius"
+        }
+        val seekBar = SeekBar(context).apply {
+            min = 1
+            max = 6
+
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            seekBar.minWidth = 400
+        }
+
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                radius = progress * 2 + 1
+                radiusText.text = "radius = $radius"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+
+        val compileBtn = ImageButton(context)
+        compileBtn.setImageDrawable(context.getDrawable(R.drawable.compile_ico))
+        compileBtn.background = null
+        compileBtn.setOnClickListener{
+            ((context)as ComponentActivity).lifecycleScope.async {
+                Toast.makeText(context, context.getText(R.string.system_filter_compiling), Toast.LENGTH_LONG).show()
+                compile(image)
+                Toast.makeText(context, context.getText(R.string.system_filter_complete), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val revertBtn = ImageButton(context)
+        revertBtn.setImageDrawable(context.getDrawable(R.drawable.clear_icon))
+        revertBtn.background = null
+
+        revertBtn.setOnClickListener{
+            image.revert()
+        }
+
+        val radiusSettingLayout = LinearLayout(context)
+        radiusSettingLayout.orientation = LinearLayout.VERTICAL
+
+        radiusSettingLayout.addView(radiusText)
+        radiusSettingLayout.addView(seekBar)
+
+        layout.addView(radiusSettingLayout)
+        layout.addView(compileBtn)
+        layout.addView(revertBtn)
+
     }
 }

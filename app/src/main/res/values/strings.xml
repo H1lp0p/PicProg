@@ -1,7 +1,18 @@
 <resources>
-    <string name="app_name">PicProg</string>
+    <string name="app_name">pic prog</string>
     <string name="default_settings">There will be settings in future</string>>
     <string name="none">Well…</string>
     <string name="title_activity_spline">SplineActivity</string>
     <string name="title_activity_menu">MenuActivity</string>
+
+    <string name="menu_redactor_button">Image redactor</string>
+    <string name="menu_spline_button">Spline</string>
+    <string name="menu_cube_button">Cube</string>
+
+    <string name="spline_polygon_check">Polygon</string>
+    <string name="spline_spline_check">spline</string>
+    <string name="spline_label">spline</string>
+
+    <string name="system_filter_compiling">Filter is compiling</string>
+    <string name="system_filter_complete">Compiling complete!</string>
 </resources>

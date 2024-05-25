@@ -14,12 +14,14 @@ import java.io.IOException
    and use all "business logic" in Image class
    (this will help to separate view on different coroutines)*/
 
-class Image(private var bitMap: Bitmap, private val name: String, private var imgView: ImageView?) {
+class Image(private var srcBitmap: Bitmap, private val name: String, private var imgView: ImageView?) {
 
+    private var newBitmap : Bitmap
     public var width : Int = 0
     public var height : Int = 0
 
     init {
+        newBitmap = srcBitmap.copy(Bitmap.Config.ARGB_8888, true)
         if (imgView != null){
             imgView!!.setImageDrawable(null)
             updateView()
@@ -31,7 +33,7 @@ class Image(private var bitMap: Bitmap, private val name: String, private var im
             val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
             val file = File(dir, "${this.name}.png")
             val stream = FileOutputStream(file)
-            this.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, stream)
+            this.newBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             /*Log.i("save", "I try to save!")*/
             stream.flush()
             stream.close()
@@ -44,22 +46,28 @@ class Image(private var bitMap: Bitmap, private val name: String, private var im
 
     fun setView(imageView: ImageView){
         this.imgView = imageView
+        updateView()
+    }
+
+    fun revert(){
+        newBitmap = srcBitmap.copy(Bitmap.Config.ARGB_8888, true)
+        updateView()
     }
 
     private fun updateView(){
         if (imgView != null){
-            imgView!!.setImageBitmap(this.bitMap)
+            imgView!!.setImageBitmap(this.newBitmap)
             this.width = imgView!!.measuredWidth
             this.height = imgView!!.measuredHeight
         }
     }
 
     fun setBitMap(newBitmap: Bitmap){
-        this.bitMap = newBitmap
+        this.newBitmap = newBitmap
         updateView()
     }
 
     fun getBitmap(): Bitmap{
-        return this.bitMap
+        return this.srcBitmap.copy(Bitmap.Config.ARGB_8888, true)
     }
 }

@@ -3,49 +3,36 @@ package com.example.picprog
 import Retouch
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.TextView
+import android.widget.LinearLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import image.Image
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import redactor.*
-import java.io.File
-import java.io.FileOutputStream
-import java.io.FileWriter
-import java.io.IOException
-import java.security.AccessController.getContext
-import java.security.Permission
 
 
 class MainActivity : ComponentActivity() {
-    lateinit var loadBtn : ImageButton
-    lateinit var imageView : ImageView
-    lateinit var saveBtn : ImageButton
-    lateinit var image: Image
-    lateinit var retouch : Retouch
+    private lateinit var loadBtn : ImageButton
+    private lateinit var imageView : ImageView
+    private lateinit var saveBtn : ImageButton
+    private var image: Image? = null
+    private lateinit var retouch : Retouch
+    private lateinit var settingsLayout: LinearLayout
 
     private var retouchFlag = false
 
-    var nowRedactor: Redactor = GausBlur()
+    private var nowRedactor: Redactor = GausBlur()
 
     @RequiresApi(Build.VERSION_CODES.P)
     val selectImageIntent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -56,62 +43,77 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_page)
 
         loadBtn = findViewById(R.id.loadBtn)
         imageView = findViewById(R.id.img)
         saveBtn = findViewById(R.id.saveBtn)
-        val loadTxt = findViewById<TextView>(R.id.loading)
+        settingsLayout = findViewById(R.id.settings)
 
-        findViewById<Button>(R.id.GausBlur).setOnClickListener{
-            nowRedactor = GausBlur()
-            val job = lifecycleScope.launch {
-                nowRedactor.compile(image)
+        findViewById<ImageButton>(R.id.GausBlur).setOnClickListener{
+            if (nowRedactor !is GausBlur) {
+                nowRedactor = GausBlur()
+            }
+            if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
+        }
+
+        findViewById<ImageButton>(R.id.Mosaic).setOnClickListener{
+            if (nowRedactor !is Mosaic) {
+                nowRedactor = Mosaic()
+            }
+            if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
+
+        }
+
+        findViewById<ImageButton>(R.id.Resize).setOnClickListener{
+            if (nowRedactor !is Resize) {
+                nowRedactor = Resize()
+            }
+            if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
+        }
+
+        findViewById<ImageButton>(R.id.Grayscale).setOnClickListener{
+            if (nowRedactor !is Grayscale) {
+                nowRedactor = Grayscale()
+            }
+            if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
+        }
+
+        findViewById<ImageButton>(R.id.Rotation).setOnClickListener{
+            if (nowRedactor !is Rotation) {
+                nowRedactor = Rotation()
+            }
+            if (image != null) nowRedactor.settings(settingsLayout, this, image!!)
+
+        }
+
+        imageView.setOnTouchListener { _: View, m: MotionEvent ->
+            retouch.onTouchEvent(m)
+        }
+
+        findViewById<ImageButton>(R.id.retouch).setOnClickListener {
+            if (!retouchFlag){
+                retouch.use(true)
+                retouchFlag = true
+                if (image != null) retouch.settings(settingsLayout, this, image!!)
+            }
+            else{
+                settingsLayout.removeAllViews()
+                retouchFlag = false
             }
         }
 
-        findViewById<Button>(R.id.Mosaic).setOnClickListener{
-            nowRedactor = Mosaic()
-            lifecycleScope.async { nowRedactor.compile(image) }
-
-        }
-
-        findViewById<Button>(R.id.Resize).setOnClickListener{
-            nowRedactor = Resize()
-            lifecycleScope.async { nowRedactor.compile(image) }
-        }
-
-        findViewById<Button>(R.id.Grayscale).setOnClickListener{
-            nowRedactor = Grayscale()
-            lifecycleScope.async { nowRedactor.compile(image) }
-        }
-
-        findViewById<Button>(R.id.Rotation).setOnClickListener{
-            nowRedactor = Rotation()
-            lifecycleScope.async { nowRedactor.compile(image) }
-
-        }
-
-        imageView.setOnTouchListener(View.OnTouchListener { _: View, m: MotionEvent ->
-            retouch.onTouchEvent(m)
-        })
-
-        findViewById<Button>(R.id.retouch).setOnClickListener {
-            retouch.use(!retouchFlag)
-            retouchFlag = !retouchFlag
-
-        }
-
         saveBtn.setOnClickListener{
-                image.save()
+                image!!.save()
         }
 
         loadBtn.setOnClickListener{
             selectImageIntent.launch("image/*")
         }
 
-        findViewById<Button>(R.id.escapeBtn).setOnClickListener {
+        findViewById<ImageButton>(R.id.escapeBtn).setOnClickListener {
             val intent = Intent(this, MenuActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
@@ -122,13 +124,13 @@ class MainActivity : ComponentActivity() {
     fun onImageGet(imgUri: Uri?){
         if (imgUri != null){
             val srcBitmap = ImageDecoder.decodeBitmap(
-                ImageDecoder.createSource(this.contentResolver, imgUri),
-                ImageDecoder.OnHeaderDecodedListener { decoder, info, source ->
-                    decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
-                    decoder.isMutableRequired = true
-                })
+                ImageDecoder.createSource(this.contentResolver, imgUri)
+            ) { decoder, _, _ ->
+                decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+                decoder.isMutableRequired = true
+            }
             image = Image(srcBitmap, "Result", imageView)
-            retouch = Retouch(this.applicationContext, image)
+            retouch = Retouch(this.applicationContext, image!!)
             retouchFlag = false
         }
     }

@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="spline"
+        android:text="@string/spline_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +53,7 @@
         app:layout_constraintBottom_toTopOf="@+id/checkBox2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backButton"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/backButton"/>
 
     <CheckBox
         android:id="@+id/checkBox2"
@@ -62,7 +62,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginBottom="8dp"
         android:minHeight="48dp"
-        android:text="polygon"
+        android:text="@string/spline_polygon_check"
         app:layout_constraintBottom_toTopOf="@+id/checkBox3"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -73,7 +73,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginBottom="8dp"
         android:minHeight="48dp"
-        android:text="spline"
+        android:text="@string/spline_spline_check"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

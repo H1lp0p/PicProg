@@ -12,7 +12,7 @@
         android:layout_height="60dp"
         android:background="@null"
         android:contentDescription="@string/none"
-        android:src="@drawable/dowload_ico"
+        android:src="@drawable/download_ico"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,6 +36,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"></LinearLayout>
+        app:layout_constraintTop_toTopOf="@+id/guideline"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

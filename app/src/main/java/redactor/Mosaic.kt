@@ -1,15 +1,28 @@
 package redactor
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Build
 import android.util.Log
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
+import com.example.picprog.R
 import image.Image
+import kotlinx.coroutines.async
 
 
 class Mosaic : Redactor() {
 
-    private var px : Int = 50
+    private var px : Int = 10
 
     private fun mosaic(source: Image) : Bitmap {
         val srcBitmap = source.getBitmap()
@@ -62,7 +75,64 @@ class Mosaic : Redactor() {
         source.setBitMap(newBitmap)
     }
 
-    override fun settings(layout: ConstraintLayout) {
-        TODO("Not yet implemented")
+    @SuppressLint("UseCompatLoadingForDrawables")
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun settings(layout: LinearLayout, context: Context, image: Image) {
+        layout.removeAllViews()
+        layout.orientation = LinearLayout.HORIZONTAL
+
+        val radiusText = TextView(context).apply {
+            text = "Px = $px"
+        }
+        val seekBar = SeekBar(context).apply {
+            min = 1
+            max = 6
+
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            seekBar.minWidth = 400
+        }
+
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                px = progress * 10
+                radiusText.text = "Px = $px"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+
+        val compileBtn = ImageButton(context)
+        compileBtn.setImageDrawable(context.getDrawable(R.drawable.compile_ico))
+        compileBtn.background = null
+        compileBtn.setOnClickListener{
+            ((context)as ComponentActivity).lifecycleScope.async {
+                Toast.makeText(context, context.getText(R.string.system_filter_compiling), Toast.LENGTH_LONG).show()
+                compile(image)
+                Toast.makeText(context, context.getText(R.string.system_filter_complete), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val revertBtn = ImageButton(context)
+        revertBtn.setImageDrawable(context.getDrawable(R.drawable.clear_icon))
+        revertBtn.background = null
+
+        revertBtn.setOnClickListener{
+            image.revert()
+        }
+
+        val radiusSettingLayout = LinearLayout(context)
+        radiusSettingLayout.orientation = LinearLayout.VERTICAL
+
+        radiusSettingLayout.addView(radiusText)
+        radiusSettingLayout.addView(seekBar)
+
+        layout.addView(radiusSettingLayout)
+        layout.addView(compileBtn)
+        layout.addView(revertBtn)
     }
 }
