@@ -132,7 +132,7 @@ class GausBlur : Redactor() {
         layout.orientation = LinearLayout.HORIZONTAL
 
         val radiusText = TextView(context).apply {
-            text = "radius = $radius"
+            text = context.getString(R.string.settings_gaus_radius, radius)
         }
         val seekBar = SeekBar(context).apply {
             min = 1
@@ -146,7 +146,7 @@ class GausBlur : Redactor() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 radius = progress * 2 + 1
-                radiusText.text = "radius = $radius"
+                radiusText.text = context.getString(R.string.settings_gaus_radius, radius)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {

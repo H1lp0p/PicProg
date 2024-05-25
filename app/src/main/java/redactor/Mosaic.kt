@@ -82,7 +82,7 @@ class Mosaic : Redactor() {
         layout.orientation = LinearLayout.HORIZONTAL
 
         val radiusText = TextView(context).apply {
-            text = "Px = $px"
+            text= context.getString(R.string.settings_mosaic_px, px)
         }
         val seekBar = SeekBar(context).apply {
             min = 1
@@ -96,7 +96,7 @@ class Mosaic : Redactor() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 px = progress * 10
-                radiusText.text = "Px = $px"
+                radiusText.text = context.getString(R.string.settings_mosaic_px, px)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {

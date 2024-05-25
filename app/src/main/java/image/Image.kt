@@ -1,11 +1,14 @@
 package image
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
+import com.example.picprog.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -17,6 +20,7 @@ import java.io.IOException
 class Image(private var srcBitmap: Bitmap, private val name: String, private var imgView: ImageView?) {
 
     private var newBitmap : Bitmap
+    private val fileName = "${this.name}.png"
     public var width : Int = 0
     public var height : Int = 0
 
@@ -28,18 +32,19 @@ class Image(private var srcBitmap: Bitmap, private val name: String, private var
         }
     }
 
-    fun save(){
+    fun save(context: Context){
         try{
             val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-            val file = File(dir, "${this.name}.png")
+            val file = File(dir, fileName)
             val stream = FileOutputStream(file)
             this.newBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             /*Log.i("save", "I try to save!")*/
             stream.flush()
             stream.close()
+            Toast.makeText(context, context.getString(R.string.system_image_saved, fileName), Toast.LENGTH_SHORT).show()
         }
         catch (e : IOException){
-            /*Log.i("save", "I can't save!")*/
+            Toast.makeText(context, context.getText(R.string.system_error), Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
     }

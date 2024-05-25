@@ -128,7 +128,7 @@ class Retouch(context: Context, private var source: Image) : View(context) {
         seekBarSettingLayout.orientation = LinearLayout.VERTICAL
 
         val radiusText = TextView(context).apply {
-            text = "radius is $retouchRadius"
+            text = context.getString(R.string.settings_retouch_radius, retouchRadius.toInt())
         }
         val seekBarRadius = SeekBar(context).apply {
             min = 10
@@ -142,7 +142,7 @@ class Retouch(context: Context, private var source: Image) : View(context) {
         seekBarRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 retouchRadius = progress.toFloat()
-                radiusText.text = "radius is $retouchRadius"
+                radiusText.text = context.getString(R.string.settings_retouch_radius, progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -153,7 +153,7 @@ class Retouch(context: Context, private var source: Image) : View(context) {
         })
 
         val strengthText = TextView(context).apply {
-            text = "Strength is $retouchStrength"
+            text = context.getString(R.string.settings_retouch_strength, (retouchStrength * 10).toInt())
         }
         val seekBarSrength = SeekBar(context).apply { 
             min = 1
@@ -164,8 +164,8 @@ class Retouch(context: Context, private var source: Image) : View(context) {
         }
         seekBarSrength.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                retouchRadius = progress.toFloat() / 10
-                strengthText.text = "Strength is $retouchStrength"
+                retouchStrength = progress.toFloat() / 10
+                strengthText.text = context.getString(R.string.settings_retouch_strength, progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {

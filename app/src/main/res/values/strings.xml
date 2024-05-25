@@ -15,4 +15,12 @@
 
     <string name="system_filter_compiling">Filter is compiling</string>
     <string name="system_filter_complete">Compiling complete!</string>
+    <string name="system_image_saved">image %1$s saved to Documents</string>
+    <string name="system_error">Something went wrong. Yep…</string>
+
+    <string name="settings_gaus_radius">radius = %1$d</string>
+    <string name="settings_mosaic_px">pixel size = %1$d</string>
+    <string name="settings_retouch_radius">radius = %1$d</string>
+    <string name="settings_retouch_strength">strength = %1$d</string>
+    <string name="settings_rotation_angle">angle is %1$d</string>
 </resources>

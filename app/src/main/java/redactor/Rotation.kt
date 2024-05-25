@@ -137,7 +137,7 @@ class Rotation : Redactor() {
         layout.orientation = LinearLayout.HORIZONTAL
 
         val radiusText = TextView(context).apply {
-            text = "angle is $angle"
+            text = context.getString(R.string.settings_rotation_angle, angle.toInt())
         }
         val seekBar = SeekBar(context).apply {
             min = -180
@@ -151,7 +151,7 @@ class Rotation : Redactor() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 angle = progress.toDouble()
-                radiusText.text = "angle is $angle"
+                radiusText.text = context.getString(R.string.settings_rotation_angle, progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.activity.ComponentActivity
 import spline.Spline
@@ -31,9 +32,9 @@ class SplineActivity : ComponentActivity() {
             splineView.splineCheck(isChecked)
         }
 
-        findViewById<Button>(R.id.clearButton).setOnClickListener { splineView.clearButton() }
+        findViewById<ImageButton>(R.id.clearButton).setOnClickListener { splineView.clearButton() }
 
-        findViewById<Button>(R.id.backButton).setOnClickListener {
+        findViewById<ImageButton>(R.id.backButton).setOnClickListener {
             val intent = Intent(this, MenuActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)

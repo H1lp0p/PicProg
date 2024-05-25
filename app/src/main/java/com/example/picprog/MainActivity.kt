@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -106,7 +107,8 @@ class MainActivity : ComponentActivity() {
         }
 
         saveBtn.setOnClickListener{
-                image!!.save()
+
+                image!!.save(this)
         }
 
         loadBtn.setOnClickListener{

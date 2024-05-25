@@ -147,8 +147,8 @@ class Cube(context: Context, res: Resources) : View(context) {
         return res
     }
     private fun rotate() {
-        val vectorX = (rotateVector[1].x - rotateVector[0].x).toFloat()
-        val vectorY = -(rotateVector[1].y - rotateVector[0].y).toFloat()
+        val vectorX = -(rotateVector[1].x - rotateVector[0].x).toFloat()
+        val vectorY = (rotateVector[1].y - rotateVector[0].y).toFloat()
 
         val angleX = atan(vectorY / distance)
         val angleY = atan(vectorX / distance)
