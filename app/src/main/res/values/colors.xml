@@ -17,4 +17,8 @@
 
     <color name="vector_color">#780202</color>
     <color name="vertex_color">#171717</color>
+
+    <color name="spline">#8BC34A</color>
+    <color name="spline_line">#000000</color>
+    <color name="spline_point">#FF0000</color>
 </resources>

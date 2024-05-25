@@ -23,9 +23,9 @@ import kotlin.math.floor
 
 class Resize : Redactor() {
 
-    private var k : Double = 0.1
+    private var k: Double = 0.1
 
-    private fun bilinearForBitmap(source: Bitmap, c: Double): Bitmap{
+    private fun bilinearForBitmap(source: Bitmap, c: Double): Bitmap {
         val newBitmap = Bitmap.createBitmap(
             Math.round(source.width * c).toInt(),
             Math.round(source.height * c).toInt(),
@@ -36,7 +36,7 @@ class Resize : Redactor() {
             for (i in 0 until newBitmap.width - 1) {
                 val x = (i / c).toFloat()
                 val y = (j / c).toFloat()
-                
+
                 val color = bilinearInterpolate(source, x, y)
 
                 newBitmap.setPixel(i, j, color)
@@ -68,7 +68,7 @@ class Resize : Redactor() {
 
     private fun getPixelColor(source: Bitmap, x: Int, y: Int): Int {
         if (x < 0 || x >= source.width || y < 0 || y >= source.height) {
-            return 0 // default color
+            return Color.argb(0,0,0,0)
         }
         return source.getPixel(x, y)
     }
@@ -80,30 +80,25 @@ class Resize : Redactor() {
         val b = ((1 - k) * Color.blue(pix1) + k * Color.blue(pix2)).toInt()
         return Color.argb(a, r, g, b)
     }
-    private fun enlargement(source: Image) : Bitmap {
-        /*val srcBitmap = source.getBitmap()
-        val resized = Bitmap.createScaledBitmap(srcBitmap, Math.round(srcBitmap.width * k).toInt(), Math.round(srcBitmap.height * k).toInt(), true)
-        return resized*/
 
+    private fun enlargement(source: Image): Bitmap {
         val srcBitmap = source.getBitmap()
 
         return bilinearForBitmap(srcBitmap, k)
     }
 
 
-    private fun reduction(source: Image) : Bitmap
-    {
+    private fun reduction(source: Image): Bitmap {
         val firstMip = source.getBitmap()
-        val c: Double = 1-((1-k)/2)
+        val c: Double = 1 - ((1 - k) / 2)
         val secondMip = bilinearForBitmap(firstMip, c)
         val firstResultBitmap = bilinearForBitmap(firstMip, k)
-        val secondResultBitmap = bilinearForBitmap(secondMip, (k/c))
+        val secondResultBitmap = bilinearForBitmap(secondMip, (k / c))
         val newBitmap = Bitmap.createBitmap(
             Math.round(firstMip.width * k).toInt(),
             Math.round(firstMip.height * k).toInt(),
             firstMip.config
         )
-
 
 
         var alpha: Int
@@ -112,7 +107,7 @@ class Resize : Redactor() {
         var blue: Int
         for (j in 0 until newBitmap.height - 1) {
             for (i in 0 until newBitmap.width - 1) {
-                if (i < secondResultBitmap.width || j < secondResultBitmap.height){
+                if (i < secondResultBitmap.width || j < secondResultBitmap.height) {
                     val pix1 = firstResultBitmap.getPixel(i, j)
                     val pix2 = secondResultBitmap.getPixel(i, j)
 
@@ -126,9 +121,8 @@ class Resize : Redactor() {
 
 
                     newBitmap.setPixel(i, j, newPixel)
-                }
-                else{
-                    newBitmap.setPixel(i, j, firstResultBitmap.getPixel(i,j))
+                } else {
+                    newBitmap.setPixel(i, j, firstResultBitmap.getPixel(i, j))
                 }
             }
         }
@@ -137,7 +131,7 @@ class Resize : Redactor() {
     }
 
     override suspend fun compile(source: Image) {
-        val newBitmap : Bitmap = if (k > 1) enlargement(source) else reduction(source)
+        val newBitmap: Bitmap = if (k > 1) enlargement(source) else reduction(source)
         source.setBitMap(newBitmap)
     }
 
@@ -148,7 +142,7 @@ class Resize : Redactor() {
         layout.orientation = LinearLayout.HORIZONTAL
 
         val radiusText = TextView(context).apply {
-            text = "Resize = ${(k*100).toInt()}%"
+            text = "Resize = ${(k * 100).toInt()}%"
         }
         val seekBar = SeekBar(context).apply {
             min = 1
@@ -159,10 +153,10 @@ class Resize : Redactor() {
             seekBar.minWidth = 400
         }
 
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 k = (progress).toDouble() / 10
-                radiusText.text = "Resize = ${(k*100).toInt()}%"
+                radiusText.text = "Resize = ${(k * 100).toInt()}%"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -175,11 +169,19 @@ class Resize : Redactor() {
         val compileBtn = ImageButton(context)
         compileBtn.setImageDrawable(context.getDrawable(R.drawable.compile_ico))
         compileBtn.background = null
-        compileBtn.setOnClickListener{
-            ((context)as ComponentActivity).lifecycleScope.async {
-                Toast.makeText(context, context.getText(R.string.system_filter_compiling), Toast.LENGTH_LONG).show()
+        compileBtn.setOnClickListener {
+            ((context) as ComponentActivity).lifecycleScope.async {
+                Toast.makeText(
+                    context,
+                    context.getText(R.string.system_filter_compiling),
+                    Toast.LENGTH_LONG
+                ).show()
                 compile(image)
-                Toast.makeText(context, context.getText(R.string.system_filter_complete), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.getText(R.string.system_filter_complete),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -187,7 +189,7 @@ class Resize : Redactor() {
         revertBtn.setImageDrawable(context.getDrawable(R.drawable.clear_icon))
         revertBtn.background = null
 
-        revertBtn.setOnClickListener{
+        revertBtn.setOnClickListener {
             image.revert()
         }
 

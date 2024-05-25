@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.CheckBox
+import com.example.picprog.R
 
 class Spline(context: Context?) : View(context) {
     private var polygon: Boolean = false
@@ -17,14 +18,15 @@ class Spline(context: Context?) : View(context) {
     private var linePaint = Paint().apply {
         strokeWidth = 5f
         style = Paint.Style.STROKE
-        color = Color.argb(255, 0, 0, 0)
+        color = resources.getColor(R.color.spline_line)
     }
     private var circlePaint = Paint().apply {
-        color = Color.RED
+        color = resources.getColor(R.color.spline_point)
         style = Paint.Style.FILL
     }
+
     private val paint = Paint().apply {
-        color = Color.argb(255, 0, 255, 0)
+        color = resources.getColor(R.color.spline)
         isAntiAlias = true
         strokeWidth = 10f
         style = Paint.Style.STROKE
@@ -37,12 +39,9 @@ class Spline(context: Context?) : View(context) {
     override fun onTouchEvent(event: MotionEvent): Boolean {
 
         when (event.action) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> { }
-
             MotionEvent.ACTION_UP -> {
                 val touchX = event.x
                 val touchY = event.y
-                /*Log.i("[Spline]x, y ->", "[$touchX, $touchY]")*/
                 points.add(Pair(touchX, touchY))
                 invalidate()
             }
@@ -74,7 +73,7 @@ class Spline(context: Context?) : View(context) {
     override fun onDraw(canvas: Canvas) {
         // draw points
         for (i in 0 until points.size) {
-            canvas.drawCircle(points[i].first, points[i].second, 20f, circlePaint)
+            canvas.drawCircle(points[i].first, points[i].second, 10f, circlePaint)
         }
 
 
