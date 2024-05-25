@@ -142,6 +142,7 @@ class Rotation : Redactor() {
         val seekBar = SeekBar(context).apply {
             min = -180
             max = 180
+            progress = angle.toInt()
 
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
